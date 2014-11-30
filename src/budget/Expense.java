@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  *
@@ -20,6 +21,8 @@ public class Expense {
     Long        postedDate;
     String      description;
     Double      amount;
+    
+    //private final SimpleStringProperty transactionDate = new SimpleStringProperty("");
     
     //Classification classification;
 
@@ -32,6 +35,10 @@ public class Expense {
         //this.classification     = new Classification(Classification.ExpenseTypeEnum.UNKNOWN);
 
         //System.out.format("%f\n",id);
+    }
+
+    Expense(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public Double getAmount() {
@@ -64,7 +71,7 @@ public class Expense {
         return dateString;
     }
 
-    public String getdescription() {
+    public String getDescription() {
         return description;
     }
 
@@ -76,8 +83,8 @@ public class Expense {
         
         out += String.format("Posted Date:      %s\n",getPostedDateString());
         out += String.format("Transaction Date: %s\n",getTransactionDateString());
-        out += String.format("Description:      %s\n",description);
-        out += String.format("Amount:           $%,.2f\n",amount);
+        out += String.format("Description:      %s\n",getDescription());
+        out += String.format("Amount:           $%,.2f\n",getAmount());
      
 
         return out;
