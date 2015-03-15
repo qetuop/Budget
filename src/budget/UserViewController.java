@@ -67,67 +67,7 @@ public class UserViewController implements Initializable {
     protected void addUser(ActionEvent event) {
         System.out.println("here");
         ObservableList<User> userData = userTableView.getItems();
-        //User user = new User();
-        //user.setFirstName("Bob2");
-        //user.setLastName("Smith2");
         
-        
-        Parent node;
-        Group g;
-        
-        //try {
-/*            
-            // 1
-            FXMLLoader fnLoader = new FXMLLoader(getClass().getResource("AddUserDialog.fxml"));           
-            node = fnLoader.load();
-            
-            // 2
-            node = FXMLLoader.load(getClass().getResource("AddUserDialog.fxml"));
-            
-            Stage stage = new Stage();
-            stage.setTitle("Add User");
-            stage.setScene(new Scene(node, 450, 150));
-            stage.setX(50);
-            stage.setY(50);
-            stage.show();
-*/            
- 
-/*
-            // 3
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Budget.class.getResource("AddUserDialog.fxml"));
-            AnchorPane page = (AnchorPane) loader.load();
-
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Add User 2");
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            
-            Window w = ((Node)event.getTarget()).getScene().getWindow();
-                                        
-            dialogStage.initOwner(w);
-            Scene scene = new Scene(page);
-            dialogStage.setScene(scene);
-            dialogStage.showAndWait();
-*/
- /*           
-            // 4
-            node = FXMLLoader.load(getClass().getResource("AddUserDialog.fxml"));
-            
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Add User");
-            dialogStage.setScene(new Scene(node, 450, 150));
- 
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            
-            Window w = ((Node)event.getTarget()).getScene().getWindow();
-                                        
-            dialogStage.initOwner(w);
-
-            dialogStage.showAndWait();
- */           
-//    } catch (IOException e) {
-//        e.printStackTrace();
-//    }
         
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
