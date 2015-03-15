@@ -9,6 +9,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 /**
@@ -19,8 +21,25 @@ public class Budget extends Application {
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("budget_tableview.fxml"));
-        Scene scene = new Scene(root);       
+        Parent root;
+        Scene scene;
+  /*    
+Alert alert = new Alert(AlertType.INFORMATION);
+alert.setTitle("Information Dialog");
+alert.setHeaderText("Look, an Information Dialog");
+alert.setContentText("I have a great message for you!");
+alert.showAndWait();
+*/
+
+        //Parent root = FXMLLoader.load(getClass().getResource("budget_tableview.fxml"));
+        //Scene scene = new Scene(root);  
+        
+        //root = FXMLLoader.load(getClass().getResource("MainAppView.fxml"));
+        //scene = new Scene(root);
+        
+        root = FXMLLoader.load(getClass().getResource("UserDataView.fxml"));
+        scene = new Scene(root);  
+        
         primaryStage.setScene(scene);
         primaryStage.show();
     }
