@@ -6,7 +6,6 @@
 package budget;
 
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -16,19 +15,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
@@ -54,8 +48,7 @@ public class UserViewController implements Initializable {
         init();
        
     }    
-    protected void init() {
-        System.out.println("here");
+    protected void init() {       
         ObservableList<User> userData = userTableView.getItems();
         User user = new User();
         user.setFirstName("Bob");
@@ -65,7 +58,7 @@ public class UserViewController implements Initializable {
     
     @FXML
     protected void addUser(ActionEvent event) {
-        System.out.println("here");
+        System.out.println("addUser");
         ObservableList<User> userData = userTableView.getItems();
         
         
@@ -115,9 +108,10 @@ public class UserViewController implements Initializable {
             return null;
         });
 
-        Optional<Pair<String, String>> result = dialog.showAndWait();
-        User newUser = new User();
+        Optional<Pair<String, String>> result = dialog.showAndWait();        
+        
         result.ifPresent(firstLastName -> {
+            User newUser = new User();
             newUser.setFirstName(firstLastName.getKey());
             newUser.setLastName(firstLastName.getValue());
             System.out.println("first=" + newUser.getFirstName() + ", last=" + newUser.getLastName());

@@ -42,6 +42,12 @@ alert.showAndWait();
         
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        Parent root2 = FXMLLoader.load(getClass().getResource("InstitutionDataView.fxml"));
+        Scene scene2 = new Scene(root2);  
+        
+        primaryStage.setScene(scene2);
+        primaryStage.show();
     }
 
     /**
