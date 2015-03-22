@@ -14,6 +14,9 @@ import javafx.collections.ObservableList;
 public class InstitutionData {
     private ObservableList<Institution> instutuionList;
     
-    public void addInstitution( Institution institution ) {;}
+    public void addInstitution( Institution institution ) {
+        instutuionList.add(institution);
+    }
+    
     public Institution getInstitution(){return new Institution();}
 }

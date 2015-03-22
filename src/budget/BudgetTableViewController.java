@@ -54,14 +54,13 @@ public class BudgetTableViewController implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("edit_dialog.fxml"));
             AnchorPane frame = fxmlLoader.load();
-            Edit_dialogController edc = (Edit_dialogController) fxmlLoader.getController();
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Edit Person");
-             dialogStage.initModality(Modality.WINDOW_MODAL);
-             
-             Stage stageTheLabelBelongs = (Stage) budgetTableView.getScene().getWindow();
-             dialogStage.initOwner(stageTheLabelBelongs);
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+
+            Stage stageTheLabelBelongs = (Stage) budgetTableView.getScene().getWindow();
+            dialogStage.initOwner(stageTheLabelBelongs);
             Scene scene = new Scene(frame);
 
             dialogStage.setScene(scene);

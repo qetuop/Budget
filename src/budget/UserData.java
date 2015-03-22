@@ -15,7 +15,17 @@ import javafx.scene.control.TableView;
 public class UserData {
     private ObservableList<User> userList;
     
-    public void addUser(User user){;}
+    public void addUser(User user){
+        userList.add(user);
+    }
     public User getUser(){return new User();}
+    
+    public void setUserList( ObservableList<User> ul){ 
+        this.userList = ul;
+    }
+    
+    public ObservableList<User> getUserList() {
+        return userList;
+    }
     
 }

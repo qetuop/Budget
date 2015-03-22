@@ -38,6 +38,9 @@ public class UserViewController implements Initializable {
     @FXML private TableColumn<User, String> FirstNameCol;   // User = data in tableview? String = field in that class?
     @FXML private TableColumn<User, String> LastNameCol;
     
+    // ? this is the main data store ?
+    private UserData userData = new UserData();
+    
     /**
      * Initializes the controller class.
      */
@@ -49,18 +52,23 @@ public class UserViewController implements Initializable {
        
     }    
     protected void init() {       
-        ObservableList<User> userData = userTableView.getItems();
+        //ObservableList<User> userData = userTableView.getItems();
+        userData.setUserList(userTableView.getItems());
+        
+        // read in saved users
+        
+        // ex:
         User user = new User();
         user.setFirstName("Bob");
         user.setLastName("Smith");
-        userData.add(user);
+        userData.addUser(user);
     }
+    
+    
     
     @FXML
     protected void addUser(ActionEvent event) {
-        System.out.println("addUser");
-        ObservableList<User> userData = userTableView.getItems();
-        
+        System.out.println("addUser");       
         
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -115,9 +123,8 @@ public class UserViewController implements Initializable {
             newUser.setFirstName(firstLastName.getKey());
             newUser.setLastName(firstLastName.getValue());
             System.out.println("first=" + newUser.getFirstName() + ", last=" + newUser.getLastName());
-            userData.add(newUser);
+            userData.addUser(newUser);
         });
-
     }
     
 }

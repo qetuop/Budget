@@ -15,11 +15,21 @@ import javafx.beans.property.StringProperty;
 public class User {
     private final StringProperty firstName;
     private final StringProperty lastName;
+    private InstitutionData institutionData;
     
     public User() {
         this.firstName = new SimpleStringProperty(this, "firstName", "");
         this.lastName = new SimpleStringProperty(this, "lastName", "");
+        
+        this.institutionData = new InstitutionData();
     }
+    
+    public User(String firstName, String lastName) {
+        this();
+        this.firstName.set(firstName);
+        this.lastName.set(lastName);
+    }
+    
     public final String getFirstName() { return firstName.get(); }
     public final void setFirstName(String value) { firstName.set(value); }
     public final StringProperty firstNameProperty() { return firstName; }
@@ -27,4 +37,10 @@ public class User {
     public final String getLastName() { return lastName.get(); }
     public final void setLastName(String value) { lastName.set(value); }
     public final StringProperty lastNameProperty() { return lastName; }
+    
+    public void addInstitution( Institution institution ){
+        this.institutionData.addInstitution(institution);
+    }
+    
+    //public Institution getInstitution();
 }

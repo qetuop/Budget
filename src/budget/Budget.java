@@ -31,12 +31,15 @@ alert.setContentText("I have a great message for you!");
 alert.showAndWait();
 */
 
-        //Parent root = FXMLLoader.load(getClass().getResource("budget_tableview.fxml"));
-        //Scene scene = new Scene(root);  
+        //root = FXMLLoader.load(getClass().getResource("budget_tableview.fxml"));
+        //scene = new Scene(root);  
+       
         
-        //root = FXMLLoader.load(getClass().getResource("MainAppView.fxml"));
-        //scene = new Scene(root);
-        
+        root = FXMLLoader.load(getClass().getResource("MainAppView.fxml"));
+        scene = new Scene(root);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+/*        
         root = FXMLLoader.load(getClass().getResource("UserDataView.fxml"));
         scene = new Scene(root);  
         
@@ -48,6 +51,7 @@ alert.showAndWait();
         
         primaryStage.setScene(scene2);
         primaryStage.show();
+*/        
     }
 
     /**
