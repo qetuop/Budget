@@ -5,12 +5,16 @@
  */
 package budget;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 
 /**
@@ -19,13 +23,38 @@ import javafx.scene.control.Tab;
  * @author Brian
  */
 public class MainAppViewController implements Initializable {
-
+    
+ 
+    private UserViewController userViewController;
+    private InstitutionViewController institutionViewController;
+    //@FXML private InstitutionViewController InstitutionsTabPage;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("UserDataView.fxml"));
+        try {
+            Parent root = (Parent) loader.load();
+             userViewController = loader.getController();
+        } catch (IOException ex) {
+            Logger.getLogger(MainAppViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        loader = new FXMLLoader(getClass().getResource("InstitutionDataView.fxml"));
+        try {
+            Parent root = (Parent) loader.load();
+              institutionViewController = loader.getController();
+        } catch (IOException ex) {
+           Logger.getLogger(MainAppViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+       
+        
     }    
     
        
@@ -35,12 +64,21 @@ public class MainAppViewController implements Initializable {
         System.out.println("userTabSelected");
         System.out.println(event.getEventType());
         System.out.println(((Tab)event.getSource()).getId());
-
+        
+        if ( userViewController != null ) {
+        User u = userViewController.getSelectedUser();
+        if ( u != null) {
+            System.out.println("*" + userViewController.getSelectedUser().getFirstName() + "*");
+        }
+        }
     }
     
     @FXML
     protected void institutionTabSelected(Event event) {
         System.out.println("institutionTabSelected");
+        
+        //institutionViewController.setup();
+        //InstitutionsTabPage.setup();
      
     }
     

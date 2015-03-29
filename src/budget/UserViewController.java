@@ -5,7 +5,8 @@
  */
 package budget;
 
-
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -26,21 +27,28 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
-
-
 /**
  * FXML Controller class
  *
  * @author Brian
  */
 public class UserViewController implements Initializable {
-    @FXML private TableView<User> userTableView;
-    @FXML private TableColumn<User, String> FirstNameCol;   // User = data in tableview? String = field in that class?
-    @FXML private TableColumn<User, String> LastNameCol;
-    
+
+    @FXML
+    public TableView<User> userTableView;
+    @FXML
+    private TableColumn<User, String> FirstNameCol;   // User = data in tableview? String = field in that class?
+    @FXML
+    private TableColumn<User, String> LastNameCol;
+
     // ? this is the main data store ?
     private UserData userData = new UserData();
     
+    public static final String USER_SELECTION = "user_selection";
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    
+    private User selectedUser = new User();
+
     /**
      * Initializes the controller class.
      */
@@ -49,27 +57,63 @@ public class UserViewController implements Initializable {
         FirstNameCol.setCellValueFactory(new PropertyValueFactory<>("FirstName")); // FirstName or firstName work?
         LastNameCol.setCellValueFactory(new PropertyValueFactory<>("LastName"));
         init();
-       
-    }    
-    protected void init() {       
+
+    }
+
+    protected void init() {
         //ObservableList<User> userData = userTableView.getItems();
         userData.setUserList(userTableView.getItems());
+
+        
         
         // read in saved users
-        
         // ex:
         User user = new User();
         user.setFirstName("Bob");
         user.setLastName("Smith");
         userData.addUser(user);
+        
+        
+        //selectedUser = user;
+        
+        userTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            //Check whether item is selected and set value of selected item to Label
+            
+            if (userTableView.getSelectionModel().getSelectedItem() != null) {
+                
+                selectedUser = userTableView.getSelectionModel().getSelectedItem();
+                System.out.println("UVC::selected user now = " + selectedUser.getFirstName());
+            }
+            
+        });
+        
+        userTableView.getSelectionModel().selectFirst();
     }
     
-    
-    
+//    public void addPropertyChangeListener(ChangeListener<? super User> listener) {
+//        //pcs.addPropertyChangeListener(listener);
+//        userTableView.getSelectionModel().selectedItemProperty().addListener(listener);
+//    }
+//    
+//    public void addPropertyChangeListener(PropertyChangeListener listener) {
+//        //pcs.addPropertyChangeListener(listener);
+//        userTableView.getSelectionModel().selectedItemProperty().addListener(listener);
+//    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.removePropertyChangeListener(listener);
+    }
+
+    public User getSelectedUser() {
+        //return userTableView.getSelectionModel().getSelectedItem();
+        return selectedUser;
+    }
+
     @FXML
     protected void addUser(ActionEvent event) {
-        System.out.println("addUser");       
-        
+        System.out.println("addUser");
+        System.out.println(this.getSelectedUser().getFirstName());
+
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("New User");
@@ -116,8 +160,8 @@ public class UserViewController implements Initializable {
             return null;
         });
 
-        Optional<Pair<String, String>> result = dialog.showAndWait();        
-        
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
         result.ifPresent(firstLastName -> {
             User newUser = new User();
             newUser.setFirstName(firstLastName.getKey());
@@ -126,5 +170,5 @@ public class UserViewController implements Initializable {
             userData.addUser(newUser);
         });
     }
-    
+
 }
