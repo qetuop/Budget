@@ -23,35 +23,15 @@ public class Budget extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root;
         Scene scene;
-  /*    
-Alert alert = new Alert(AlertType.INFORMATION);
-alert.setTitle("Information Dialog");
-alert.setHeaderText("Look, an Information Dialog");
-alert.setContentText("I have a great message for you!");
-alert.showAndWait();
-*/
-
-        //root = FXMLLoader.load(getClass().getResource("budget_tableview.fxml"));
-        //scene = new Scene(root);  
-       
-        
+        System.out.println("Budget::1");
         root = FXMLLoader.load(getClass().getResource("MainAppView.fxml"));
+        System.out.println("Budget::2");
         scene = new Scene(root);
+        System.out.println("Budget::3");
         primaryStage.setScene(scene);
+        System.out.println("Budget::4");
         primaryStage.show();
-/*        
-        root = FXMLLoader.load(getClass().getResource("UserDataView.fxml"));
-        scene = new Scene(root);  
-        
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        
-        Parent root2 = FXMLLoader.load(getClass().getResource("InstitutionDataView.fxml"));
-        Scene scene2 = new Scene(root2);  
-        
-        primaryStage.setScene(scene2);
-        primaryStage.show();
-*/        
+        System.out.println("Budget::5");
     }
 
     /**

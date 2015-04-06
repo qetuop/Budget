@@ -36,45 +36,56 @@ public class InstitutionViewController implements Initializable {
     private TableView<Institution> institutionTableView;
     @FXML
     private TableColumn<Institution, String> InstitutionNameCol;
+    
+    private UserViewController userViewController;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        System.out.println("IVC::initialize()");
         InstitutionNameCol.setCellValueFactory(new PropertyValueFactory<>("InstitutionName"));
         init();
     }
 
     private void init() {
+        System.out.println("IVC::init()");
         ObservableList<Institution> institutionData = institutionTableView.getItems();
         Institution intit = new Institution();
         intit.setInstitutionName("Hole In Backyard Inc.");
         institutionData.add(intit);
-        
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                "UserDataView.fxml"));
-        try {
-            Parent root = (Parent) loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(InstitutionViewController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        UserViewController ctrl = loader.getController();
-        ctrl.userTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-            //Check whether item is selected and set value of selected item to Label
-            System.out.println("IVC::something was selected in the user table " + newValue);
-//            if (table.getSelectionModel().getSelectedItem() != null) {
-//                lblTool.setText(newValue.getTool());
-//            }
-        });
-        
-        User u = ctrl.getSelectedUser();
-        System.out.println("IVC::user= " + u.getFirstName());
+//        
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("UserDataView.fxml"));
+//        try {
+//            Parent root = (Parent) loader.load();
+//        } catch (IOException ex) {
+//            Logger.getLogger(InstitutionViewController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        UserViewController ctrl = loader.getController();
+//              
+//        ctrl.addPropertyChangeListener((PropertyChangeEvent pce) -> {
+//                System.out.println("HERE!!!!");
+//                if (UserViewController.USER_SELECTION.equals(pce.getPropertyName())) {
+//                    System.out.println("IVC::something was selected in the user table " + pce.getNewValue());
+//                }
+//            });
+//        
+//        User u = ctrl.getSelectedUser();
+//        System.out.println("IVC::user= " + u.getFirstName());
 
+//        userViewController.addPropertyChangeListener((PropertyChangeEvent pce) -> {
+//                System.out.println("HERE!!!!");
+//                if (UserViewController.USER_SELECTION.equals(pce.getPropertyName())) {
+//                    System.out.println("IVC::something was selected in the user table " + pce.getNewValue());
+//                }
+//            });
     }
 
     @FXML
     protected void addInstitution(ActionEvent event) {
+        System.out.println("IVC::addInstitution()");
+        
         System.out.println("addInstitution");
         ObservableList<Institution> institutionData = institutionTableView.getItems();
 
@@ -140,7 +151,7 @@ public class InstitutionViewController implements Initializable {
     } // addInstitution
 
     void setup() {
-        
+        System.out.println("IVC::setup()");
         
          FXMLLoader loader = new FXMLLoader(getClass().getResource("UserDataView.fxml"));
         try {
@@ -152,5 +163,7 @@ public class InstitutionViewController implements Initializable {
         }
         
     }
+
+   
 
 }

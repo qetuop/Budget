@@ -5,13 +5,15 @@
  */
 package budget;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
+import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,6 +28,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
+import javafx.fxml.FXMLLoader;
+import java.io.IOException;
 
 /**
  * FXML Controller class
@@ -49,11 +53,23 @@ public class UserViewController implements Initializable {
     
     private User selectedUser = new User();
 
+//    public UserViewController() {
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("UserDataView.fxml"));
+//        //fxmlLoader.setRoot(this);
+//        //fxmlLoader.setController(this);
+//        try {
+//            fxmlLoader.load();
+//        } catch (IOException exception) {
+//            throw new RuntimeException(exception);
+//        }
+//    }
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        System.out.println("UVC::initialize()");
         FirstNameCol.setCellValueFactory(new PropertyValueFactory<>("FirstName")); // FirstName or firstName work?
         LastNameCol.setCellValueFactory(new PropertyValueFactory<>("LastName"));
         init();
@@ -61,6 +77,7 @@ public class UserViewController implements Initializable {
     }
 
     protected void init() {
+        System.out.println("UVC::init()");
         //ObservableList<User> userData = userTableView.getItems();
         userData.setUserList(userTableView.getItems());
 
@@ -80,25 +97,36 @@ public class UserViewController implements Initializable {
             //Check whether item is selected and set value of selected item to Label
             
             if (userTableView.getSelectionModel().getSelectedItem() != null) {
-                
+
+                User oldSelectedUser = selectedUser;   
+        
                 selectedUser = userTableView.getSelectionModel().getSelectedItem();
                 System.out.println("UVC::selected user now = " + selectedUser.getFirstName());
-            }
+                System.out.println(" pcs.getPropertyChangeListeners().length " +  pcs.getPropertyChangeListeners().length);
+                PropertyChangeEvent evt = new PropertyChangeEvent(this, USER_SELECTION, oldSelectedUser, selectedUser);
+                pcs.firePropertyChange(evt);
+                }
             
         });
         
-        userTableView.getSelectionModel().selectFirst();
+        //userTableView.getSelectionModel().selectFirst();
     }
     
 //    public void addPropertyChangeListener(ChangeListener<? super User> listener) {
 //        //pcs.addPropertyChangeListener(listener);
 //        userTableView.getSelectionModel().selectedItemProperty().addListener(listener);
 //    }
-//    
-//    public void addPropertyChangeListener(PropertyChangeListener listener) {
-//        //pcs.addPropertyChangeListener(listener);
-//        userTableView.getSelectionModel().selectedItemProperty().addListener(listener);
-//    }
+    
+    
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+        System.out.println("UVC::addPropertyChangeListener " + listener + ", pcs length= " + pcs.getPropertyChangeListeners().length);
+    }
+    
+    public void addPropertyChangeListener(InvalidationListener listener) {
+        //pcs.addPropertyChangeListener(listener);
+        userTableView.getSelectionModel().selectedItemProperty().addListener(listener);
+    }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         this.pcs.removePropertyChangeListener(listener);
