@@ -5,17 +5,12 @@
  */
 package budget;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.control.Tab;
+import javafx.scene.Node;
 
 /**
  * FXML Controller class
@@ -25,15 +20,18 @@ import javafx.scene.control.Tab;
 public class MainAppViewController implements Initializable {
     
     
+    private Budget budget;
  
     //private UserViewController userViewController;
     //private InstitutionViewController institutionViewController;
     
-    //@FXML 
-    //private UserViewController UsersTab;
+    @FXML Node usersTab;
+    @FXML private UserViewController usersTabController;
+    @FXML Node institutionsTab;
+    @FXML private InstitutionViewController institutionsTabController;
     
     //<fx:include fx:id="InstitutionsTabPage" source="InstitutionDataView.fxml" />
-    @FXML private InstitutionViewController InstitutionsTabPage;
+    //@FXML private InstitutionViewController InstitutionsTabPage;
     
     /**
      * Initializes the controller class.
@@ -90,5 +88,15 @@ public class MainAppViewController implements Initializable {
         //InstitutionsTabPage.setup();
      
     }
+    
+    public void setBudget(Budget budget) {      
+        this.budget = budget;               
+        // hopefully it's not too late to call this here
+        //PC/SC can't use the main app in its initalize/ctor
+        usersTabController.setBudget(budget);
+        institutionsTabController.setBudget(budget);
+    }
+    
+   
     
 }

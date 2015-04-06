@@ -38,6 +38,9 @@ import java.io.IOException;
  */
 public class UserViewController implements Initializable {
 
+    private Budget budget;
+    UserData userData; // will be set from budget class
+    
     @FXML
     public TableView<User> userTableView;
     @FXML
@@ -46,7 +49,7 @@ public class UserViewController implements Initializable {
     private TableColumn<User, String> LastNameCol;
 
     // ? this is the main data store ?
-    private UserData userData = new UserData();
+    //private UserData userData = new UserData();
     
     public static final String USER_SELECTION = "user_selection";
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -72,13 +75,16 @@ public class UserViewController implements Initializable {
         System.out.println("UVC::initialize()");
         FirstNameCol.setCellValueFactory(new PropertyValueFactory<>("FirstName")); // FirstName or firstName work?
         LastNameCol.setCellValueFactory(new PropertyValueFactory<>("LastName"));
-        init();
+        //init();
 
     }
 
     protected void init() {
         System.out.println("UVC::init()");
+        
         //ObservableList<User> userData = userTableView.getItems();
+        // this is temporary?
+        userData = budget.getUserData();
         userData.setUserList(userTableView.getItems());
 
         
@@ -99,8 +105,9 @@ public class UserViewController implements Initializable {
             if (userTableView.getSelectionModel().getSelectedItem() != null) {
 
                 User oldSelectedUser = selectedUser;   
-        
+                
                 selectedUser = userTableView.getSelectionModel().getSelectedItem();
+                userData.setSelectedUser(selectedUser);
                 System.out.println("UVC::selected user now = " + selectedUser.getFirstName());
                 System.out.println(" pcs.getPropertyChangeListeners().length " +  pcs.getPropertyChangeListeners().length);
                 PropertyChangeEvent evt = new PropertyChangeEvent(this, USER_SELECTION, oldSelectedUser, selectedUser);
@@ -197,6 +204,12 @@ public class UserViewController implements Initializable {
             System.out.println("first=" + newUser.getFirstName() + ", last=" + newUser.getLastName());
             userData.addUser(newUser);
         });
+    }
+
+    void setBudget(Budget budget) {
+        this.budget = budget;
+        
+        init();
     }
 
 }

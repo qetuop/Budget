@@ -34,12 +34,12 @@
                     <tabs>
                         <Tab id="Users" fx:id="UsersTab" onSelectionChanged="#userTabSelected" text="Users">
                             <content>
-                                <fx:include fx:id="UsersTabPage" source="UserDataView.fxml" />
+                                <fx:include fx:id="usersTab" source="UserDataView.fxml" />
                             </content>
                         </Tab>
                         <Tab onSelectionChanged="#institutionTabSelected" text="Institutions">
                             <content>
-                                <fx:include fx:id="InstitutionsTabPage" source="InstitutionDataView.fxml" />
+                                <fx:include fx:id="institutionsTab" source="InstitutionDataView.fxml" />
                             </content>
                         </Tab>
                         <Tab text="Accounts">

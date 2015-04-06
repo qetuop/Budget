@@ -19,19 +19,24 @@ import javafx.stage.Stage;
  */
 public class Budget extends Application {
     
+    // ? this is the main data store ?
+    private UserData userData = new UserData();
+    
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root;
         Scene scene;
-        System.out.println("Budget::1");
-        root = FXMLLoader.load(getClass().getResource("MainAppView.fxml"));
-        System.out.println("Budget::2");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Budget.class.getResource("MainAppView.fxml"));
+        root = loader.load();
+        
+        // enable all children to get this class (and thus the userData)
+        MainAppViewController mvc = loader.getController();
+        mvc.setBudget(this);
+            
         scene = new Scene(root);
-        System.out.println("Budget::3");
         primaryStage.setScene(scene);
-        System.out.println("Budget::4");
         primaryStage.show();
-        System.out.println("Budget::5");
     }
 
     /**
@@ -39,6 +44,10 @@ public class Budget extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }  
+    
+    public UserData getUserData() {
+        return userData;
     }
     
-}
+} // Budget

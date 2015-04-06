@@ -14,6 +14,7 @@ import javafx.scene.control.TableView;
  */
 public class UserData {
     private ObservableList<User> userList;
+    private User selectedUser;
     
     public void addUser(User user){
         userList.add(user);
@@ -26,6 +27,15 @@ public class UserData {
     
     public ObservableList<User> getUserList() {
         return userList;
+    }
+    
+    public User getSelectedUser(){
+        return selectedUser;
+    }
+    
+    // set by table selection, use index?
+    public void setSelectedUser(User user) {
+        selectedUser = user;
     }
     
 }
