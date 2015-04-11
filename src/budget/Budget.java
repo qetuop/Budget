@@ -20,10 +20,12 @@ import javafx.stage.Stage;
 public class Budget extends Application {
     
     // ? this is the main data store ?
-    private UserData userData = new UserData();
+    private final UserData userData = new UserData();
     
     @Override
     public void start(Stage primaryStage) throws Exception {
+        hardcodedSetup();
+        
         Parent root;
         Scene scene;
         FXMLLoader loader = new FXMLLoader();
@@ -49,5 +51,18 @@ public class Budget extends Application {
     public UserData getUserData() {
         return userData;
     }
+
+    private void hardcodedSetup() {
+        System.out.println("Budget::hardcodedSetup()");
+        User user = new User();
+        user.setFirstName("Bob");
+        user.setLastName("Smith");
+        
+        Institution institution = new Institution();
+        institution.setInstitutionName("Hole in Backyard INC.");
+        user.addInstitution(institution);
+        
+        userData.addUser(user);
+     }
     
 } // Budget

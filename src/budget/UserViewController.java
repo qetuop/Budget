@@ -5,15 +5,11 @@
  */
 package budget;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,8 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
-import javafx.fxml.FXMLLoader;
-import java.io.IOException;
+import javafx.collections.ObservableList;
 
 /**
  * FXML Controller class
@@ -81,73 +76,33 @@ public class UserViewController implements Initializable {
 
     protected void init() {
         System.out.println("UVC::init()");
-        
-        //ObservableList<User> userData = userTableView.getItems();
+
         // this is temporary?
         userData = budget.getUserData();
-        userData.setUserList(userTableView.getItems());
-
+        userTableView.setItems(userData.getUserList());
         
-        
-        // read in saved users
-        // ex:
-        User user = new User();
-        user.setFirstName("Bob");
-        user.setLastName("Smith");
-        userData.addUser(user);
-        
-        
-        //selectedUser = user;
-        
-        userTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-            //Check whether item is selected and set value of selected item to Label
-            
+        // handle table selection events
+        userTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {          
             if (userTableView.getSelectionModel().getSelectedItem() != null) {
-
-                User oldSelectedUser = selectedUser;   
                 
                 selectedUser = userTableView.getSelectionModel().getSelectedItem();
                 userData.setSelectedUser(selectedUser);
+                
                 System.out.println("UVC::selected user now = " + selectedUser.getFirstName());
-                System.out.println(" pcs.getPropertyChangeListeners().length " +  pcs.getPropertyChangeListeners().length);
-                PropertyChangeEvent evt = new PropertyChangeEvent(this, USER_SELECTION, oldSelectedUser, selectedUser);
-                pcs.firePropertyChange(evt);
-                }
-            
+                debugUser(userData.getSelectedUser());
+            }            
         });
         
-        //userTableView.getSelectionModel().selectFirst();
-    }
-    
-//    public void addPropertyChangeListener(ChangeListener<? super User> listener) {
-//        //pcs.addPropertyChangeListener(listener);
-//        userTableView.getSelectionModel().selectedItemProperty().addListener(listener);
-//    }
-    
-    
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
-        System.out.println("UVC::addPropertyChangeListener " + listener + ", pcs length= " + pcs.getPropertyChangeListeners().length);
-    }
-    
-    public void addPropertyChangeListener(InvalidationListener listener) {
-        //pcs.addPropertyChangeListener(listener);
-        userTableView.getSelectionModel().selectedItemProperty().addListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.removePropertyChangeListener(listener);
-    }
-
-    public User getSelectedUser() {
-        //return userTableView.getSelectionModel().getSelectedItem();
-        return selectedUser;
-    }
+         userTableView.getSelectionModel().selectFirst();
+        
+        User user = userData.getSelectedUser();
+        System.out.println("user " + user);
+        
+    } // init
 
     @FXML
     protected void addUser(ActionEvent event) {
         System.out.println("addUser");
-        System.out.println(this.getSelectedUser().getFirstName());
 
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -202,7 +157,8 @@ public class UserViewController implements Initializable {
             newUser.setFirstName(firstLastName.getKey());
             newUser.setLastName(firstLastName.getValue());
             System.out.println("first=" + newUser.getFirstName() + ", last=" + newUser.getLastName());
-            userData.addUser(newUser);
+            userData.addUser(newUser);            
+            userTableView.getSelectionModel().select(newUser);
         });
     }
 
@@ -210,6 +166,14 @@ public class UserViewController implements Initializable {
         this.budget = budget;
         
         init();
+    }
+
+    private void debugUser(User selectedUser) {
+        InstitutionData institutionData = selectedUser.getInstitutionData();
+        if ( institutionData !=null ){
+            ObservableList<Institution> institutionList = institutionData.getInstitutionList();
+            System.out.println("UVC::debugUser, inst list = " + institutionList.size());
+        }
     }
 
 }

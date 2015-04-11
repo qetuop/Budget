@@ -7,6 +7,7 @@ package budget;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -40,6 +41,12 @@ public class User {
     
     public void addInstitution( Institution institution ){
         this.institutionData.addInstitution(institution);
+    }
+    
+   
+
+    public InstitutionData getInstitutionData() {
+        return institutionData;
     }
     
     //public Institution getInstitution();

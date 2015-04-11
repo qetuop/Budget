@@ -5,6 +5,7 @@
  */
 package budget;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -12,10 +13,15 @@ import javafx.collections.ObservableList;
  * @author Brian
  */
 public class InstitutionData {
-    private ObservableList<Institution> instutuionList;
+    private ObservableList<Institution> institutionList = FXCollections.observableArrayList();
+    private User selectedInstitution;
     
     public void addInstitution( Institution institution ) {
-        instutuionList.add(institution);
+        institutionList.add(institution);
+    }
+    
+    public ObservableList<Institution> getInstitutionList() {
+        return institutionList;
     }
     
     public Institution getInstitution(){return new Institution();}
