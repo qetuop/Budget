@@ -35,7 +35,7 @@ public class UserViewController implements Initializable {
 
     private Budget budget;
     UserData userData; // will be set from budget class
-    
+
     @FXML
     public TableView<User> userTableView;
     @FXML
@@ -43,12 +43,16 @@ public class UserViewController implements Initializable {
     @FXML
     private TableColumn<User, String> LastNameCol;
 
+    @FXML
+    public TableView<Institution> userInstitutionTableView;
+    @FXML
+    private TableColumn<Institution, String> InstitutionCol;
+
     // ? this is the main data store ?
     //private UserData userData = new UserData();
-    
     public static final String USER_SELECTION = "user_selection";
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    
+
     private User selectedUser = new User();
 
 //    public UserViewController() {
@@ -61,7 +65,6 @@ public class UserViewController implements Initializable {
 //            throw new RuntimeException(exception);
 //        }
 //    }
-    
     /**
      * Initializes the controller class.
      */
@@ -70,6 +73,8 @@ public class UserViewController implements Initializable {
         System.out.println("UVC::initialize()");
         FirstNameCol.setCellValueFactory(new PropertyValueFactory<>("FirstName")); // FirstName or firstName work?
         LastNameCol.setCellValueFactory(new PropertyValueFactory<>("LastName"));
+
+        InstitutionCol.setCellValueFactory(new PropertyValueFactory<>("InstitutionName"));
         //init();
 
     }
@@ -77,27 +82,36 @@ public class UserViewController implements Initializable {
     protected void init() {
         System.out.println("UVC::init()");
 
-        // this is temporary?
         userData = budget.getUserData();
         userTableView.setItems(userData.getUserList());
-        
+
         // handle table selection events
-        userTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {          
+        userTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (userTableView.getSelectionModel().getSelectedItem() != null) {
-                
+
                 selectedUser = userTableView.getSelectionModel().getSelectedItem();
                 userData.setSelectedUser(selectedUser);
-                
+
                 System.out.println("UVC::selected user now = " + selectedUser.getFirstName());
-                debugUser(userData.getSelectedUser());
-            }            
+                debugUser(selectedUser);
+
+                // reset data
+                //userInstitutionTableView
+                // link institution view
+                userInstitutionTableView.setItems(selectedUser.getInstitutionData().getInstitutionList());
+            }
         });
-        
-         userTableView.getSelectionModel().selectFirst();
-        
+
+        // done the first time through
+        userTableView.getSelectionModel().selectFirst();
+
         User user = userData.getSelectedUser();
-        System.out.println("user " + user);
-        
+        System.out.println("user* " + user);
+
+        System.out.println(userInstitutionTableView);
+        System.out.println(user.getInstitutionData());
+        System.out.println(user.getInstitutionData().getInstitutionList());
+
     } // init
 
     @FXML
@@ -157,20 +171,20 @@ public class UserViewController implements Initializable {
             newUser.setFirstName(firstLastName.getKey());
             newUser.setLastName(firstLastName.getValue());
             System.out.println("first=" + newUser.getFirstName() + ", last=" + newUser.getLastName());
-            userData.addUser(newUser);            
+            userData.addUser(newUser);
             userTableView.getSelectionModel().select(newUser);
         });
     }
 
     void setBudget(Budget budget) {
         this.budget = budget;
-        
+
         init();
     }
 
     private void debugUser(User selectedUser) {
         InstitutionData institutionData = selectedUser.getInstitutionData();
-        if ( institutionData !=null ){
+        if (institutionData != null) {
             ObservableList<Institution> institutionList = institutionData.getInstitutionList();
             System.out.println("UVC::debugUser, inst list = " + institutionList.size());
         }
