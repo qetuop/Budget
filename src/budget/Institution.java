@@ -18,22 +18,48 @@ import javafx.beans.property.StringProperty;
  */
 public class Institution implements Externalizable {
     private final StringProperty institutionName;
+    private AccountData accountData;
     
     public Institution(){
-        this.institutionName = new SimpleStringProperty(this, "institutionName", "");
+        this.institutionName = new SimpleStringProperty(this, "institutionName", "");        
+        this.accountData = new AccountData();
     }
     
-    public final String getInstitutionName() { return institutionName.get(); }
-    public final void setInstitutionName( String value ) {institutionName.set(value); }
-    public final StringProperty getInstitutionNameProperty() { return institutionName; }
+    public Institution(String institutionName) {
+        this();
+        this.setInstitutionName(institutionName);
+    }
+    
+    
+    public final String getInstitutionName() { 
+        return institutionName.get(); 
+    }
+    
+    public final void setInstitutionName( String value ) {
+        institutionName.set(value); 
+    }
+    
+    public final StringProperty getInstitutionNameProperty() { 
+        return institutionName; 
+    }
 
+    public void addAccount(Account account) {
+        this.accountData.addAccount(account);
+    }
+
+    public AccountData getAccountData() {
+        return accountData;
+    }
+    
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeObject(getInstitutionName());
+        out.writeObject(accountData);
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         setInstitutionName((String) in.readObject());
+        accountData = (AccountData)in.readObject();
     }
 }

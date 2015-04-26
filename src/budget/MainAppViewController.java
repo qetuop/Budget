@@ -36,8 +36,12 @@ public class MainAppViewController implements Initializable {
     
     @FXML Node usersTab;
     @FXML private UserViewController usersTabController;
+    
     @FXML Node institutionsTab;
     @FXML private InstitutionViewController institutionsTabController;
+    
+    @FXML Node accountsTab;
+    @FXML private AccountViewController accountsTabController;
     
     //<fx:include fx:id="InstitutionsTabPage" source="InstitutionDataView.fxml" />
     //@FXML private InstitutionViewController InstitutionsTabPage;
@@ -107,10 +111,11 @@ public class MainAppViewController implements Initializable {
     @FXML
     protected void institutionTabSelected(Event event) {
         System.out.println("MAVC::institutionTabSelected");
-        
-        //institutionViewController.setup();
-        //InstitutionsTabPage.setup();
-     
+    }
+    
+    @FXML
+    protected void accountTabSelected(Event event) {
+        System.out.println("MAVC::accountTabSelected");        
     }
     
     public void setBudget(Budget budget) {      
@@ -119,6 +124,7 @@ public class MainAppViewController implements Initializable {
         //PC/SC can't use the main app in its initalize/ctor
         usersTabController.setBudget(budget);
         institutionsTabController.setBudget(budget);
+        accountsTabController.setBudget(budget);
     }
     
    

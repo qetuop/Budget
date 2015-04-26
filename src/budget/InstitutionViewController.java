@@ -36,7 +36,8 @@ public class InstitutionViewController implements Initializable {
     @FXML
     private TableColumn<Institution, String> InstitutionNameCol;
 
-    //private UserViewController userViewController;
+    private Institution selectedInstitution = new Institution();
+    
     /**
      * Initializes the controller class.
      */
@@ -55,12 +56,27 @@ public class InstitutionViewController implements Initializable {
         // set the table up with initial data
         setTable(userData.getSelectedUser());
 
-        // handle user selection - set the institution list to this user's list
+        // handle user selection (from other tab) - set the institution list to this user's list
         userData.addPropertyChangeListener(evt -> {
             User user = (User) evt.getNewValue();
 
             setTable(user);
         });
+        
+        // propagate institution selections
+        institutionTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (institutionTableView.getSelectionModel().getSelectedItem() != null) {
+
+                selectedInstitution = institutionTableView.getSelectionModel().getSelectedItem();
+                userData.getInstitutionData().setSelectedInstitution(selectedInstitution);
+
+                // link institution view - Right hand side table - future growth
+                //userInstitutionTableView.setItems(selectedUser.getInstitutionData().getInstitutionList());
+            }
+        });
+
+        // done the first time through
+        institutionTableView.getSelectionModel().selectFirst();
 
     } // init
 

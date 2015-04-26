@@ -5,6 +5,10 @@
  */
 package budget;
 
+import static budget.UserData.USER_SELECTION;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -19,7 +23,10 @@ import javafx.collections.ObservableList;
  */
 public class InstitutionData implements Externalizable {
     private ObservableList<Institution> institutionList = FXCollections.observableArrayList();
-    private User selectedInstitution;
+    private Institution selectedInstitution;
+    
+    public static final String INSTITUTION_SELECTION = "institution_selection";
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
     public void addInstitution( Institution institution ) {
         institutionList.add(institution);
@@ -29,8 +36,27 @@ public class InstitutionData implements Externalizable {
         return institutionList;
     }
     
-    public Institution getInstitution(){return new Institution();}
+    public Institution getInstitution(){
+        return new Institution();
+    }
 
+    // set by table selection, use index?
+    public void setSelectedInstitution(Institution institution) {
+
+        Institution oldSelectedInstitution = selectedInstitution;
+        selectedInstitution = institution;
+
+        PropertyChangeEvent evt = new PropertyChangeEvent(this, INSTITUTION_SELECTION, oldSelectedInstitution, selectedInstitution);
+        pcs.firePropertyChange(evt);
+    }
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+    
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(listener);
+    }
+    
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         ArrayList<Institution> tmp = new ArrayList<>(institutionList);
@@ -41,5 +67,9 @@ public class InstitutionData implements Externalizable {
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         ArrayList<Institution> tmp = (ArrayList<Institution>) in.readObject();
         institutionList = FXCollections.observableArrayList(tmp);
+    }
+
+    Institution getSelectedInstitution() {
+        return selectedInstitution;
     }
 }

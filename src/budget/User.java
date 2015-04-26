@@ -32,8 +32,9 @@ public class User implements Externalizable {
 
     public User(String firstName, String lastName) {
         this();
-        this.firstName.set(firstName);
-        this.lastName.set(lastName);
+        
+        this.setFirstName(firstName);
+        this.setLastName(lastName);
     }
 
     public final String getFirstName() {
@@ -82,5 +83,9 @@ public class User implements Externalizable {
         setLastName((String) in.readObject());
         
         institutionData = (InstitutionData)in.readObject();
+    }
+
+    Institution getSelectedInstitution() {
+        return institutionData.getSelectedInstitution();
     }
 }

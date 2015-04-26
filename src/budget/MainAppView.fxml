@@ -39,12 +39,15 @@
                                 <fx:include fx:id="usersTab" source="UserDataView.fxml" />
                             </content>
                         </Tab>
-                        <Tab id="Institutions" fx:id="InstitutionTab" onSelectionChanged="#institutionTabSelected" text="Institutions">
+                        <Tab id="Institutions" fx:id="InstitutionsTab" onSelectionChanged="#institutionTabSelected" text="Institutions">
                             <content>
                                 <fx:include fx:id="institutionsTab" source="InstitutionDataView.fxml" />
                             </content>
                         </Tab>
-                        <Tab text="Accounts">
+                        <Tab id="Accounts" fx:id="AccountsTab" onSelectionChanged="#accountTabSelected" text="Accounts">
+                            <content>
+                                <fx:include fx:id="accountsTab" source="AccountDataView.fxml" />
+                            </content>
                         </Tab>
                         <Tab text="Items">
                         </Tab>

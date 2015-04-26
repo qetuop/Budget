@@ -95,9 +95,8 @@ public class UserViewController implements Initializable {
                 System.out.println("UVC::selected user now = " + selectedUser.getFirstName());
                 debugUser(selectedUser);
 
-                // reset data
-                //userInstitutionTableView
-                // link institution view
+
+                // link institution view - Right hand side table - future growth
                 userInstitutionTableView.setItems(selectedUser.getInstitutionData().getInstitutionList());
             }
         });

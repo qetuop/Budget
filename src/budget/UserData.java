@@ -69,7 +69,11 @@ public class UserData implements Externalizable {
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         //public void addPropertyChangeListener(InvalidationListener listener) {
         pcs.addPropertyChangeListener(listener);
-        System.out.println("UserData::addPropertyChangeListener " + listener + ", pcs length= " + pcs.getPropertyChangeListeners().length);
+        //System.out.println("UserData::addPropertyChangeListener " + listener + ", pcs length= " + pcs.getPropertyChangeListeners().length);
+    }
+    
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(listener);
     }
 
     @Override
@@ -82,6 +86,10 @@ public class UserData implements Externalizable {
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         ArrayList<User> tmp = (ArrayList<User>) in.readObject();
         userList = FXCollections.observableArrayList(tmp);
+    }
+
+    InstitutionData getInstitutionData() {
+        return selectedUser.getInstitutionData();
     }
 
 }
