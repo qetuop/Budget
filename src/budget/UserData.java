@@ -8,6 +8,11 @@ package budget;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.util.ArrayList;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -17,7 +22,7 @@ import javafx.collections.ObservableList;
  *
  * @author Brian
  */
-public class UserData {
+public class UserData implements Externalizable {
 
     private ObservableList<User> userList = FXCollections.observableArrayList();
     private User selectedUser;
@@ -25,7 +30,7 @@ public class UserData {
     //BooleanProperty UserSelected = new SimpleBooleanProperty(false);
     public static final String USER_SELECTION = "user_selection";
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    
+
     public void UserData() {
         //userList = new ObservableList<User>() = FXCollections.observableArrayList();
     }
@@ -34,8 +39,9 @@ public class UserData {
         userList.add(user);
     }
 
+    // TODO: Fix this
     public User getUser() {
-        return new User();
+        return userList.get(0);
     }
 
     public void setUserList(ObservableList<User> ul) {
@@ -61,9 +67,21 @@ public class UserData {
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-    //public void addPropertyChangeListener(InvalidationListener listener) {
+        //public void addPropertyChangeListener(InvalidationListener listener) {
         pcs.addPropertyChangeListener(listener);
         System.out.println("UserData::addPropertyChangeListener " + listener + ", pcs length= " + pcs.getPropertyChangeListeners().length);
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        ArrayList<User> tmp = new ArrayList<>(userList);
+        out.writeObject(tmp);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        ArrayList<User> tmp = (ArrayList<User>) in.readObject();
+        userList = FXCollections.observableArrayList(tmp);
     }
 
 }

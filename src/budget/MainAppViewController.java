@@ -5,8 +5,17 @@
  */
 package budget;
 
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -64,7 +73,22 @@ public class MainAppViewController implements Initializable {
         
     }    
     
-       
+    @FXML
+    protected void fileSaveSelected(Event event) {
+        System.out.println("MAVC::fileSaveSelected");
+        
+        budget.save();
+    }
+    
+    @FXML
+    protected void fileOpenSelected(Event event) {
+        System.out.println("MAVC::fileOpenSelected");
+        
+        budget.load();
+    }
+    
+  
+    
     // two events on selection, then new tab and the old tab....
     @FXML
     protected void userTabSelected(Event event) {

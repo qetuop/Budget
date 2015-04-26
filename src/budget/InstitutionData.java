@@ -5,6 +5,11 @@
  */
 package budget;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -12,7 +17,7 @@ import javafx.collections.ObservableList;
  *
  * @author Brian
  */
-public class InstitutionData {
+public class InstitutionData implements Externalizable {
     private ObservableList<Institution> institutionList = FXCollections.observableArrayList();
     private User selectedInstitution;
     
@@ -25,4 +30,16 @@ public class InstitutionData {
     }
     
     public Institution getInstitution(){return new Institution();}
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        ArrayList<Institution> tmp = new ArrayList<>(institutionList);
+        out.writeObject(tmp);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        ArrayList<Institution> tmp = (ArrayList<Institution>) in.readObject();
+        institutionList = FXCollections.observableArrayList(tmp);
+    }
 }

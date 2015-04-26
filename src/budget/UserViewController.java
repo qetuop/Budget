@@ -105,18 +105,18 @@ public class UserViewController implements Initializable {
         // done the first time through
         userTableView.getSelectionModel().selectFirst();
 
-        User user = userData.getSelectedUser();
-        System.out.println("user* " + user);
+        //User user = userData.getSelectedUser();
+        //System.out.println("user* " + user);
 
-        System.out.println(userInstitutionTableView);
-        System.out.println(user.getInstitutionData());
-        System.out.println(user.getInstitutionData().getInstitutionList());
+        //System.out.println(userInstitutionTableView);
+        //System.out.println(user.getInstitutionData());
+        //System.out.println(user.getInstitutionData().getInstitutionList());
 
     } // init
 
     @FXML
     protected void addUser(ActionEvent event) {
-        System.out.println("addUser");
+        System.out.println("UVC::addUser");
 
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
