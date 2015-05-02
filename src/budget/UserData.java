@@ -25,14 +25,12 @@ import javafx.collections.ObservableList;
 public class UserData implements Externalizable {
 
     private ObservableList<User> userList = FXCollections.observableArrayList();
-    private User selectedUser;
+    private User selectedUser = new User();
 
-    //BooleanProperty UserSelected = new SimpleBooleanProperty(false);
     public static final String USER_SELECTION = "user_selection";
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public void UserData() {
-        //userList = new ObservableList<User>() = FXCollections.observableArrayList();
     }
 
     public void addUser(User user) {
@@ -58,7 +56,6 @@ public class UserData implements Externalizable {
 
     // set by table selection, use index?
     public void setSelectedUser(User user) {
-
         User oldSelectedUser = selectedUser;
         selectedUser = user;
 
@@ -67,9 +64,7 @@ public class UserData implements Externalizable {
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-        //public void addPropertyChangeListener(InvalidationListener listener) {
         pcs.addPropertyChangeListener(listener);
-        //System.out.println("UserData::addPropertyChangeListener " + listener + ", pcs length= " + pcs.getPropertyChangeListeners().length);
     }
     
     public void removePropertyChangeListener(PropertyChangeListener listener) {

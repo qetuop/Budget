@@ -36,6 +36,7 @@ public class AccountViewController implements Initializable {
     @FXML
     private TableColumn<Account, String> AccountNameCol;
 
+    private Account selectedAccount = new Account();
 
     /**
      * Initializes the controller class.
@@ -54,12 +55,28 @@ public class AccountViewController implements Initializable {
         // set the table up with initial data
         setTable(userData.getSelectedUser().getSelectedInstitution());
 
-        // handle institution selection 
+        // handle INSTITUTION table selection events 
         userData.getInstitutionData().addPropertyChangeListener(evt -> {
+            System.out.println("AVC::INSTITUTION has changed");
             Institution institution = (Institution) evt.getNewValue();
 
             setTable(institution);
         });
+        
+        // propagate account selections
+        accountTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (accountTableView.getSelectionModel().getSelectedItem() != null) {
+
+                selectedAccount = accountTableView.getSelectionModel().getSelectedItem();
+                userData.getInstitutionData().getAccountData().setSelectedAccount(selectedAccount);
+
+                // link institution view - Right hand side table - future growth
+                //userInstitutionTableView.setItems(selectedUser.getInstitutionData().getInstitutionList());
+            }
+        });
+
+        // done the first time through
+        accountTableView.getSelectionModel().selectFirst();
 
     } // init
 
@@ -107,14 +124,16 @@ public class AccountViewController implements Initializable {
     }
 
     private void setTable(Institution selectedInstitution) {
-        if (selectedInstitution != null) {
+        System.out.println("AVC::setTable() " + selectedInstitution);
+        
+        //if (selectedInstitution != null) {
             AccountData accountData = selectedInstitution.getAccountData();
 
-            if (accountData != null) {
+            //if (accountData != null) {
                 ObservableList<Account> accountList = accountData.getAccountList();
                 accountTableView.setItems(accountList);
-            }
-        }
+            //}
+        //}
     }
 
 }

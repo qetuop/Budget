@@ -23,7 +23,7 @@ import javafx.collections.ObservableList;
  */
 public class InstitutionData implements Externalizable {
     private ObservableList<Institution> institutionList = FXCollections.observableArrayList();
-    private Institution selectedInstitution;
+    private Institution selectedInstitution = new Institution();
     
     public static final String INSTITUTION_SELECTION = "institution_selection";
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -42,14 +42,16 @@ public class InstitutionData implements Externalizable {
 
     // set by table selection, use index?
     public void setSelectedInstitution(Institution institution) {
-
+        System.out.println("ID::setSelectedInstitution " +pcs.getPropertyChangeListeners().length);
         Institution oldSelectedInstitution = selectedInstitution;
         selectedInstitution = institution;
 
         PropertyChangeEvent evt = new PropertyChangeEvent(this, INSTITUTION_SELECTION, oldSelectedInstitution, selectedInstitution);
         pcs.firePropertyChange(evt);
     }
+    
     public void addPropertyChangeListener(PropertyChangeListener listener) {
+        System.out.println("ID::addPropertyChangeListener");
         pcs.addPropertyChangeListener(listener);
     }
     
@@ -71,5 +73,9 @@ public class InstitutionData implements Externalizable {
 
     Institution getSelectedInstitution() {
         return selectedInstitution;
+    }
+
+    AccountData getAccountData() {
+        return selectedInstitution.getAccountData();
     }
 }

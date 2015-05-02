@@ -33,21 +33,25 @@ public class Budget extends Application {
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //hardcodedSetup();
-        load();
+        
+        if ( !load() )
+            hardcodedSetup();
+
+        debugAllUserData();
         
         Parent root;
         Scene scene;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Budget.class.getResource("MainAppView.fxml"));
         root = loader.load();
-        
+
         // enable all children to get this class (and thus the userData)
         MainAppViewController mvc = loader.getController();            
         mvc.setBudget(this);
                     
         scene = new Scene(root);
         primaryStage.setScene(scene);
+        primaryStage.setTitle("Budget 2000");
         primaryStage.show();  
     }
 
@@ -79,7 +83,7 @@ public class Budget extends Application {
         userData.addUser(user);
      }
     
-    public void load() {
+    public Boolean load() {
         try {
             FileInputStream fileIn = new FileInputStream("test.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -89,18 +93,20 @@ public class Budget extends Application {
             
             User u2 = userData.getUser();
             
-            System.out.println(u2.getFirstName() + " " + u2.getLastName() + " " + u2.getInstitutionData().getInstitutionList().get(0).getInstitutionName());
+            //System.out.println(u2.getFirstName() + " " + u2.getLastName() + " " + u2.getInstitutionData().getInstitutionList().get(0).getInstitutionName());
             
             //budget.setUserData(userDataIn);
             
         } catch (IOException i) {
             i.printStackTrace();
-            return;
+            return false;
         } catch (ClassNotFoundException c) {
             System.out.println("User class not found");
             c.printStackTrace();
-            return;
+            return false;
         }
+        
+        return true;
     }
     
     public void save() {
@@ -117,6 +123,33 @@ public class Budget extends Application {
         } catch (IOException ex) {
             Logger.getLogger(MainAppViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    void debugSelectedUserData() {
+        System.out.println("** SelectedUser **");
+        
+        User u = userData.getSelectedUser();
+        System.out.println("  USER: " + u.getFirstName() + " " + u.getLastName());
+        
+        InstitutionData i = u.getInstitutionData();
+        System.out.println("  INST: " + i.getSelectedInstitution().getInstitutionName());
+        
+        AccountData a = i.getAccountData();
+        System.out.println("  ACNT: " + a.getAccountList().size()); 
+        
+        System.out.println("****************");
+    }
+    
+    void debugAllUserData() {
+        
+        for (User u : userData.getUserList() ){
+            System.out.println(u.getFirstName() + " " + u.getLastName());
+            for ( Institution i : u.getInstitutionData().getInstitutionList() ) {
+                System.out.println("  " + i.getInstitutionName());
+                for ( Account a : i.getAccountData().getAccountList() ) {
+                    System.out.println("    " + a.getAccountName());
+                }
+            } // institution            
+        } // user
     }
     
 } // Budget

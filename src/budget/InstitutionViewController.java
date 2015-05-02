@@ -5,6 +5,7 @@
  */
 package budget;
 
+import java.beans.PropertyChangeSupport;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +32,21 @@ public class InstitutionViewController implements Initializable {
     private Budget budget;
     UserData userData; // will be gotten from budget class
 
+    // left side table/col
     @FXML
     private TableView<Institution> institutionTableView;
     @FXML
     private TableColumn<Institution, String> InstitutionNameCol;
 
-    private Institution selectedInstitution = new Institution();
-    
+    // right side table/col
+    @FXML
+    public TableView<Account> institutionAccountTableView;
+    @FXML
+    private TableColumn<Account, String> AccountCol;
+
+    //public static final String INSTITUTION_SELECTION = "institution_selection";
+    //private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    //private Institution selectedInstitution = new Institution();
     /**
      * Initializes the controller class.
      */
@@ -45,6 +54,8 @@ public class InstitutionViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         System.out.println("IVC::initialize()");
         InstitutionNameCol.setCellValueFactory(new PropertyValueFactory<>("InstitutionName"));
+
+        AccountCol.setCellValueFactory(new PropertyValueFactory<>("AccountName"));
         //init();
     }
 
@@ -56,22 +67,27 @@ public class InstitutionViewController implements Initializable {
         // set the table up with initial data
         setTable(userData.getSelectedUser());
 
-        // handle user selection (from other tab) - set the institution list to this user's list
+        // handle USER selection (from other tab) - set the institution list to this user's list
         userData.addPropertyChangeListener(evt -> {
             User user = (User) evt.getNewValue();
-
+budget.debugSelectedUserData();
             setTable(user);
         });
-        
-        // propagate institution selections
+
+        // handle INSTITUTION table selection events
         institutionTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (institutionTableView.getSelectionModel().getSelectedItem() != null) {
 
-                selectedInstitution = institutionTableView.getSelectionModel().getSelectedItem();
+                Institution selectedInstitution = institutionTableView.getSelectionModel().getSelectedItem();
+                
+                System.out.println("IVC::selected Institution now = " + selectedInstitution.getInstitutionName());     
+                
                 userData.getInstitutionData().setSelectedInstitution(selectedInstitution);
+                
+                           
 
                 // link institution view - Right hand side table - future growth
-                //userInstitutionTableView.setItems(selectedUser.getInstitutionData().getInstitutionList());
+                institutionAccountTableView.setItems(userData.getSelectedUser().getInstitutionData().getAccountData().getAccountList());
             }
         });
 
@@ -98,25 +114,23 @@ public class InstitutionViewController implements Initializable {
 
         // The Java 8 way to get the response value (with lambda expression).
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(institutionName -> {
-            System.out.println("Your choice: " + institutionName);
-            
-            Institution institution = new Institution();
-            institution.setInstitutionName(institutionName);
-            institutionData.add(institution);
 
-            // write the selection back to the user's list
-            User user = userData.getSelectedUser();
-            if (user != null) {
-                System.out.println("The selected user is " + user.getFirstName());
-                //user.addInstitution(institution);
-             }
+        // Add institution to data store and set it as table selection
+        result.ifPresent(institutionName -> {
+            Institution institution = new Institution(institutionName);
+            institutionData.add(institution);
+            institutionTableView.getSelectionModel().select(institution);
+
+//            // write the selection back to the user's list
+//            User user = userData.getSelectedUser();
+//            if (user != null) {
+//                System.out.println("The selected user is " + user.getFirstName());
+//                //user.addInstitution(institution);
+//             }
         });
 
     } // addInstitution
 
-
-//    }
     void setBudget(Budget budget) {
         this.budget = budget;
 
@@ -124,6 +138,7 @@ public class InstitutionViewController implements Initializable {
     }
 
     private void setTable(User selectedUser) {
+        
         if (selectedUser != null) {
             InstitutionData institutionData = selectedUser.getInstitutionData();
 
@@ -131,7 +146,10 @@ public class InstitutionViewController implements Initializable {
                 ObservableList<Institution> institutionList = institutionData.getInstitutionList();
                 institutionTableView.setItems(institutionList);
             }
+
+            // link institution view - Right hand side table
+            institutionAccountTableView.setItems(userData.getSelectedUser().getInstitutionData().getAccountData().getAccountList());
         }
     }
-
-}
+    
+} // InstitutionViewController

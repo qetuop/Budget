@@ -48,12 +48,10 @@ public class UserViewController implements Initializable {
     @FXML
     private TableColumn<Institution, String> InstitutionCol;
 
-    // ? this is the main data store ?
-    //private UserData userData = new UserData();
-    public static final String USER_SELECTION = "user_selection";
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    //public static final String USER_SELECTION = "user_selection";
+    //private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    private User selectedUser = new User();
+    //private User selectedUser = new User();
 
 //    public UserViewController() {
 //        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("UserDataView.fxml"));
@@ -85,16 +83,14 @@ public class UserViewController implements Initializable {
         userData = budget.getUserData();
         userTableView.setItems(userData.getUserList());
 
-        // handle table selection events
+        // handle USER table selection events
         userTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (userTableView.getSelectionModel().getSelectedItem() != null) {
 
-                selectedUser = userTableView.getSelectionModel().getSelectedItem();
+                User selectedUser = userTableView.getSelectionModel().getSelectedItem();
                 userData.setSelectedUser(selectedUser);
 
-                System.out.println("UVC::selected user now = " + selectedUser.getFirstName());
-                debugUser(selectedUser);
-
+                System.out.println("UVC::selected user now = " + selectedUser.getFirstName());                
 
                 // link institution view - Right hand side table - future growth
                 userInstitutionTableView.setItems(selectedUser.getInstitutionData().getInstitutionList());
@@ -103,14 +99,7 @@ public class UserViewController implements Initializable {
 
         // done the first time through
         userTableView.getSelectionModel().selectFirst();
-
-        //User user = userData.getSelectedUser();
-        //System.out.println("user* " + user);
-
-        //System.out.println(userInstitutionTableView);
-        //System.out.println(user.getInstitutionData());
-        //System.out.println(user.getInstitutionData().getInstitutionList());
-
+        
     } // init
 
     @FXML
@@ -165,11 +154,9 @@ public class UserViewController implements Initializable {
 
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
+        // Add user to data store and set it as table selection
         result.ifPresent(firstLastName -> {
-            User newUser = new User();
-            newUser.setFirstName(firstLastName.getKey());
-            newUser.setLastName(firstLastName.getValue());
-            System.out.println("first=" + newUser.getFirstName() + ", last=" + newUser.getLastName());
+            User newUser = new User(firstLastName.getKey(),firstLastName.getValue());
             userData.addUser(newUser);
             userTableView.getSelectionModel().select(newUser);
         });
@@ -181,12 +168,12 @@ public class UserViewController implements Initializable {
         init();
     }
 
-    private void debugUser(User selectedUser) {
-        InstitutionData institutionData = selectedUser.getInstitutionData();
-        if (institutionData != null) {
-            ObservableList<Institution> institutionList = institutionData.getInstitutionList();
-            System.out.println("UVC::debugUser, inst list = " + institutionList.size());
-        }
-    }
+//    private void debugUser(User selectedUser) {
+//        InstitutionData institutionData = selectedUser.getInstitutionData();
+//        if (institutionData != null) {
+//            ObservableList<Institution> institutionList = institutionData.getInstitutionList();
+//            System.out.println("UVC::debugUser, inst list = " + institutionList.size());
+//        }
+//    }
 
 }
