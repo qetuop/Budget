@@ -143,5 +143,9 @@ public class UserViewController implements Initializable {
         this.budgetData = budgetData;
         init();
     }
+    
+    public void setFirstEntry() {
+        userTableView.getSelectionModel().selectFirst();
+    }
 
 } // UserViewController

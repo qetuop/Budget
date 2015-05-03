@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -81,8 +83,12 @@ public class MainApp extends Application {
         Account account = new Account();
         account.setAccountName("Old Sock");
         
+        final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         Transaction transaction = new Transaction();
-        transaction.setTransactionName("wooded nickle");
+        transaction.setTransactionDate(LocalDate.now());
+        transaction.setTransactionName("wooden nickle");
+        transaction.setTransactionAmount(100.28);
+        
                 
         account.addTransaction(transaction);
         institution.addAccount(account);

@@ -34,22 +34,22 @@
             <children>-->
                 <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="403.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
                     <tabs>
-                        <Tab id="Users" fx:id="UsersTab" text="Users">
+                        <Tab id="Users" fx:id="UsersTab" onSelectionChanged="#userTabSelected" text="Users">
                             <content>
                                 <fx:include fx:id="usersTab" source="UserDataView.fxml" />
                             </content>
                         </Tab>
-                        <Tab id="Institutions" fx:id="InstitutionsTab" text="Institutions">
+                        <Tab id="Institutions" fx:id="InstitutionsTab" onSelectionChanged="#institutionTabSelected" text="Institutions">
                             <content>
                                 <fx:include fx:id="institutionsTab" source="InstitutionDataView.fxml" />
                             </content>
                         </Tab>
-                        <Tab id="Accounts" fx:id="AccountsTab" text="Accounts">
+                        <Tab id="Accounts" fx:id="AccountsTab" onSelectionChanged="#accountTabSelected" text="Accounts">
                             <content>
                                 <fx:include fx:id="accountsTab" source="AccountDataView.fxml" />
                             </content>
                         </Tab>
-                        <Tab id="Transactions" fx:id="TransactionsTab" text="Transactions">
+                        <Tab id="Transactions" fx:id="TransactionsTab" onSelectionChanged="#transactionTabSelected" text="Transactions">
                             <content>
                                 <fx:include fx:id="transactionsTab" source="TransactionDataView.fxml" />
                             </content>

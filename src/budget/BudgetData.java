@@ -34,7 +34,7 @@ public class BudgetData implements Externalizable {
     public static final String INSTITUTION_SELECTION = "institution_selection";
     public static final String ACCOUNT_SELECTION = "account_selection";
     public static final String TRANSACTION_SELECTION = "transaction_selection";
-    
+
     private final PropertyChangeSupport pcsUser = new PropertyChangeSupport(this);
     private final PropertyChangeSupport pcsInstitution = new PropertyChangeSupport(this);
     private final PropertyChangeSupport pcsAccount = new PropertyChangeSupport(this);
@@ -55,7 +55,7 @@ public class BudgetData implements Externalizable {
     public Account getSelectedAccount() {
         return selectedAccount;
     }
-    
+
     public Transaction getSelectedTransaction() {
         return selectedTransaction;
     }
@@ -65,6 +65,10 @@ public class BudgetData implements Externalizable {
         selectedUser = user;
 
         PropertyChangeEvent evt = new PropertyChangeEvent(this, USER_SELECTION, oldSelectedUser, selectedUser);
+        
+        // un set next lower class
+        setSelectedInstitution(new Institution());
+        
         pcsUser.firePropertyChange(evt);
     }
 
@@ -73,6 +77,10 @@ public class BudgetData implements Externalizable {
         selectedInstitution = institution;
 
         PropertyChangeEvent evt = new PropertyChangeEvent(this, INSTITUTION_SELECTION, oldSelectedInstitution, selectedInstitution);
+        
+        // un set next lower class
+        setSelectedAccount(new Account());
+        
         pcsInstitution.firePropertyChange(evt);
     }
 
@@ -81,11 +89,15 @@ public class BudgetData implements Externalizable {
         selectedAccount = account;
 
         PropertyChangeEvent evt = new PropertyChangeEvent(this, ACCOUNT_SELECTION, old, selectedAccount);
+        
+        // un set next lower class
+        setSelectedTransaction(new Transaction());
+        
         pcsAccount.firePropertyChange(evt);
     }
-    
+
     void setSelectedTransaction(Transaction transaction) {
-       Transaction old = selectedTransaction;
+        Transaction old = selectedTransaction;
         selectedTransaction = transaction;
 
         PropertyChangeEvent evt = new PropertyChangeEvent(this, TRANSACTION_SELECTION, old, selectedTransaction);
@@ -115,7 +127,7 @@ public class BudgetData implements Externalizable {
     public void removeAccountPropertyChangeListener(PropertyChangeListener listener) {
         pcsAccount.removePropertyChangeListener(listener);
     }
-    
+
     public void addTransactionPropertyChangeListener(PropertyChangeListener listener) {
         pcsTransaction.addPropertyChangeListener(listener);
     }
@@ -123,8 +135,6 @@ public class BudgetData implements Externalizable {
     public void removeTransactionPropertyChangeListener(PropertyChangeListener listener) {
         pcsTransaction.removePropertyChangeListener(listener);
     }
-    
-    
 
     public void setUserList(ObservableList<User> userList) {
         this.userList = userList;
@@ -163,27 +173,35 @@ public class BudgetData implements Externalizable {
         Institution i = this.getSelectedInstitution();
         Account a = this.getSelectedAccount();
         Transaction t = this.getSelectedTransaction();
+
+        System.out.println("  USER: " + u + ", institution size: " + u.getInstitutionList().size());
+        System.out.println("  INST: " + i + ", account size: " + i.getAccountList().size());
+        System.out.println("  ACNT: " + a);
+        System.out.println("  TRAS: " + t);
         
-        System.out.println("  USER: " + u.getFirstName() + " " + u.getLastName() + ", institution size: " + u.getInstitutionList().size());
-        System.out.println("  INST: " + i.getInstitutionName() + ", account size: " + i.getAccountList().size());
-        System.out.println("  ACNT: " + a.getAccountName());
-        System.out.println("  TRAS: " + t.getTransactionName());
         System.out.println("****************");
     }
 
     void debugAllUserData() {
-
+        System.out.println("** All Data **");
+        
         for (User u : getUserList()) {
-            System.out.println(u.getFirstName() + " " + u.getLastName());
+            System.out.println(u);
+            
             for (Institution i : u.getInstitutionList()) {
-                System.out.println("  " + i.getInstitutionName());
-                for ( Account a : i.getAccountList() ) {
-                    System.out.println("    " + a.getAccountName());
-                    for ( Transaction t : a.getTransactionList() )
-                        System.out.println("     " + t.getTransactionName());
-                }
+                System.out.println("  " + i);
+                
+                for (Account a : i.getAccountList()) {
+                    System.out.println("    " + a);
+                    
+                    for (Transaction t : a.getTransactionList()) {
+                        System.out.println("     " + t);
+                    } // transaction
+                } // account
             } // institution            
         } // user
+
+        System.out.println("****************");
     }
 
 } // BudgetData

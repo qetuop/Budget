@@ -58,6 +58,7 @@ public class AccountViewController implements Initializable {
 
         // handle INSTITUTION selection (from other tab) - set the institution list to this user's list
         budgetData.addInstitutionPropertyChangeListener(evt -> {
+            accountTableView.getSelectionModel().selectFirst();
             setTable();
         });
 
@@ -119,8 +120,12 @@ public class AccountViewController implements Initializable {
             accountTableView.setItems(accountList);
 
             // link institution view - Right hand side table
-            //accountTransactionTableView.setItems(selectedAccount.getTransactionList());
+            accountTransactionTableView.setItems(budgetData.getSelectedAccount().getTransactionList());
         }
+    }
+    
+    public void setFirstEntry() {
+        accountTableView.getSelectionModel().selectFirst();
     }
 
 } // AccountViewController

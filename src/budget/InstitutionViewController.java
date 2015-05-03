@@ -58,15 +58,18 @@ public class InstitutionViewController implements Initializable {
         setTable();
 
         // handle USER selection (from other tab) - set the institution list to this user's list
-        budgetData.addUserPropertyChangeListener( evt -> { setTable(); } );
+        budgetData.addUserPropertyChangeListener(evt -> {
+            //institutionTableView.getSelectionModel().selectFirst();
+            setTable();
+        });
 
         // handle INSTITUTION table selection events
         institutionTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (institutionTableView.getSelectionModel().getSelectedItem() != null) {
-                
-                Institution selectedInstitution = institutionTableView.getSelectionModel().getSelectedItem();                   
+
+                Institution selectedInstitution = institutionTableView.getSelectionModel().getSelectedItem();
                 budgetData.setSelectedInstitution(selectedInstitution);
- 
+
                 // link institution view - Right hand side table - future growth
                 institutionAccountTableView.setItems(selectedInstitution.getAccountList());
             }
@@ -74,7 +77,6 @@ public class InstitutionViewController implements Initializable {
 
         // done the first time through
         institutionTableView.getSelectionModel().selectFirst();
-
     } // init
 
     @FXML
@@ -108,17 +110,21 @@ public class InstitutionViewController implements Initializable {
         this.budgetData = budgetData;
         init();
     }
-    
+
     private void setTable() {
         User user = budgetData.getSelectedUser();
-        
+
         if (user != null) {
-            ObservableList<Institution> institutionList = user.getInstitutionList();
-            institutionTableView.setItems(institutionList);
+            //ObservableList<Institution> institutionList = user.getInstitutionList();
+            institutionTableView.setItems(user.getInstitutionList());
 
             // link institution view - Right hand side table
-            //institutionAccountTableView.setItems(userData.getSelectedUser().getInstitutionData().getAccountData().getAccountList());
+            institutionAccountTableView.setItems(budgetData.getSelectedInstitution().getAccountList());
         }
+    }
+
+    public void setFirstEntry() {
+        institutionTableView.getSelectionModel().selectFirst();
     }
 
 } // InstitutionViewController

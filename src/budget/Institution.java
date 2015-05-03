@@ -70,4 +70,12 @@ public class Institution implements Externalizable {
         accountList = FXCollections.observableArrayList(tmp);
     }
     
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        result.append(this.getInstitutionName());
+        return result.toString();
+    }
+    
 } // Institution

@@ -64,5 +64,13 @@ public class Account implements Externalizable {
         ArrayList<Transaction> tmp = (ArrayList<Transaction>) in.readObject();
         transactionList = FXCollections.observableArrayList(tmp);
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        result.append(this.getAccountName());
+        return result.toString();
+    }
 
 } // Account

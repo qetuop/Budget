@@ -58,18 +58,23 @@ public class MainAppViewController implements Initializable {
     // two events on selection, then new tab and the old tab....
     @FXML
     protected void userTabSelected(Event event) {
-        //System.out.println("MAVC::userTabSelected");       
+//        usersTabController.setFirstEntry();  // these mess things up
     }
     
     @FXML
     protected void institutionTabSelected(Event event) {
-        //System.out.println("MAVC::institutionTabSelected");
+//        institutionsTabController.setFirstEntry();
     }
     
     @FXML
     protected void accountTabSelected(Event event) {
-        //System.out.println("MAVC::accountTabSelected");        
-    }       
+//        accountsTabController.setFirstEntry(); 
+    } 
+    
+    @FXML
+    protected void transactionTabSelected(Event event) {
+//        transactionsTabController.setFirstEntry();  
+    } 
 
     void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;

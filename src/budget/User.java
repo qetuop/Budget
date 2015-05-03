@@ -90,5 +90,13 @@ public class User implements Externalizable {
         ArrayList<Institution> tmp = (ArrayList<Institution>) in.readObject();
         institutionList = FXCollections.observableArrayList(tmp);
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        result.append(this.getFirstName() + " " + this.getLastName());
+        return result.toString();
+    }
 
 } // User

@@ -6,6 +6,9 @@
 package budget;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +21,8 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.StringConverter;
 
 /**
  * FXML Controller class
@@ -32,6 +37,12 @@ public class TransactionViewController implements Initializable {
     private TableView<Transaction> transactionTableView;
     @FXML
     private TableColumn<Transaction, String> TransactionNameCol;
+    @FXML
+    private TableColumn<Transaction, LocalDate> TransactionDateCol;
+    @FXML
+    private TableColumn<Transaction, Double> TransactionAmountCol;
+    
+    final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     /**
      * Initializes the controller class.
@@ -39,8 +50,34 @@ public class TransactionViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         System.out.println("TVC::initialize()");
+        
+        TransactionDateCol.setCellValueFactory(new PropertyValueFactory<>("TransactionDate"));
         TransactionNameCol.setCellValueFactory(new PropertyValueFactory<>("TransactionName"));
-    }
+        TransactionAmountCol.setCellValueFactory(new PropertyValueFactory<>("TransactionAmount"));
+        
+//        TransactionDateCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<LocalDate>() {
+//
+//            @Override
+//            public String toString(LocalDate t) {
+//                if (t==null) {
+//                    return "" ;
+//                } else {
+//                    return dateFormat.format(t);
+//                }
+//            }
+//
+//            @Override
+//            public LocalDate fromString(String string) {
+//                try {
+//                    return LocalDate.parse(string, dateFormat);
+//                } catch (DateTimeParseException exc) {
+//                    return null ;
+//                }
+//            }
+//
+//        }));
+        
+    } // initialize
 
     private void init() {
         System.out.println("TVC::init()");
@@ -111,6 +148,10 @@ public class TransactionViewController implements Initializable {
             // link institution view - Right hand side table
             //accounttransactionTableView.setItems(selectedTransaction.getTransactionList());
         }
+    }
+    
+    public void setFirstEntry() {
+        transactionTableView.getSelectionModel().selectFirst();
     }
 
 } // TransactionViewController
