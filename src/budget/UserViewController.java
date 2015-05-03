@@ -5,7 +5,6 @@
  */
 package budget;
 
-import java.beans.PropertyChangeSupport;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -24,7 +23,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
-import javafx.collections.ObservableList;
 
 /**
  * FXML Controller class
@@ -33,8 +31,7 @@ import javafx.collections.ObservableList;
  */
 public class UserViewController implements Initializable {
 
-    private Budget budget;
-    UserData userData; // will be set from budget class
+    private BudgetData budgetData; // will be set from main controller
 
     @FXML
     public TableView<User> userTableView;
@@ -48,21 +45,6 @@ public class UserViewController implements Initializable {
     @FXML
     private TableColumn<Institution, String> InstitutionCol;
 
-    //public static final String USER_SELECTION = "user_selection";
-    //private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
-    //private User selectedUser = new User();
-
-//    public UserViewController() {
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("UserDataView.fxml"));
-//        //fxmlLoader.setRoot(this);
-//        //fxmlLoader.setController(this);
-//        try {
-//            fxmlLoader.load();
-//        } catch (IOException exception) {
-//            throw new RuntimeException(exception);
-//        }
-//    }
     /**
      * Initializes the controller class.
      */
@@ -73,33 +55,30 @@ public class UserViewController implements Initializable {
         LastNameCol.setCellValueFactory(new PropertyValueFactory<>("LastName"));
 
         InstitutionCol.setCellValueFactory(new PropertyValueFactory<>("InstitutionName"));
-        //init();
-
     }
 
     protected void init() {
         System.out.println("UVC::init()");
 
-        userData = budget.getUserData();
-        userTableView.setItems(userData.getUserList());
+        userTableView.setItems(budgetData.getUserList());
 
         // handle USER table selection events
         userTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (userTableView.getSelectionModel().getSelectedItem() != null) {
 
                 User selectedUser = userTableView.getSelectionModel().getSelectedItem();
-                userData.setSelectedUser(selectedUser);
+                budgetData.setSelectedUser(selectedUser);
 
-                System.out.println("UVC::selected user now = " + selectedUser.getFirstName());                
+                System.out.println("UVC::selected user now = " + selectedUser.getFirstName());
 
-                // link institution view - Right hand side table - future growth
-                userInstitutionTableView.setItems(selectedUser.getInstitutionData().getInstitutionList());
+                // link institution view - Right hand side table
+                userInstitutionTableView.setItems(selectedUser.getInstitutionList());
             }
         });
 
         // done the first time through
         userTableView.getSelectionModel().selectFirst();
-        
+
     } // init
 
     @FXML
@@ -156,15 +135,14 @@ public class UserViewController implements Initializable {
 
         // Add user to data store and set it as table selection
         result.ifPresent(firstLastName -> {
-            User newUser = new User(firstLastName.getKey(),firstLastName.getValue());
-            userData.addUser(newUser);
+            User newUser = new User(firstLastName.getKey(), firstLastName.getValue());
+            budgetData.addUser(newUser);
             userTableView.getSelectionModel().select(newUser);
         });
     }
 
-    void setBudget(Budget budget) {
-        this.budget = budget;
-
+    void setBudgetData(BudgetData budgetData) {
+        this.budgetData = budgetData;
         init();
     }
 
@@ -175,5 +153,4 @@ public class UserViewController implements Initializable {
 //            System.out.println("UVC::debugUser, inst list = " + institutionList.size());
 //        }
 //    }
-
 }

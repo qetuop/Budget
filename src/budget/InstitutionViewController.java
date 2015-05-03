@@ -5,14 +5,11 @@
  */
 package budget;
 
-import java.beans.PropertyChangeSupport;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,8 +26,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
  */
 public class InstitutionViewController implements Initializable {
 
-    private Budget budget;
-    UserData userData; // will be gotten from budget class
+    private BudgetData budgetData; // will be set from main controller
 
     // left side table/col
     @FXML
@@ -44,9 +40,6 @@ public class InstitutionViewController implements Initializable {
     @FXML
     private TableColumn<Account, String> AccountCol;
 
-    //public static final String INSTITUTION_SELECTION = "institution_selection";
-    //private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    //private Institution selectedInstitution = new Institution();
     /**
      * Initializes the controller class.
      */
@@ -56,38 +49,26 @@ public class InstitutionViewController implements Initializable {
         InstitutionNameCol.setCellValueFactory(new PropertyValueFactory<>("InstitutionName"));
 
         AccountCol.setCellValueFactory(new PropertyValueFactory<>("AccountName"));
-        //init();
     }
 
     private void init() {
         System.out.println("IVC::init()");
 
-        userData = budget.getUserData();
-
         // set the table up with initial data
-        setTable(userData.getSelectedUser());
+        setTable();
 
         // handle USER selection (from other tab) - set the institution list to this user's list
-        userData.addPropertyChangeListener(evt -> {
-            User user = (User) evt.getNewValue();
-budget.debugSelectedUserData();
-            setTable(user);
-        });
+        budgetData.addUserPropertyChangeListener( evt -> { setTable(); } );
 
         // handle INSTITUTION table selection events
         institutionTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (institutionTableView.getSelectionModel().getSelectedItem() != null) {
-
-                Institution selectedInstitution = institutionTableView.getSelectionModel().getSelectedItem();
                 
-                System.out.println("IVC::selected Institution now = " + selectedInstitution.getInstitutionName());     
-                
-                userData.getInstitutionData().setSelectedInstitution(selectedInstitution);
-                
-                           
-
+                Institution selectedInstitution = institutionTableView.getSelectionModel().getSelectedItem();                   
+                budgetData.setSelectedInstitution(selectedInstitution);
+ 
                 // link institution view - Right hand side table - future growth
-                institutionAccountTableView.setItems(userData.getSelectedUser().getInstitutionData().getAccountData().getAccountList());
+                institutionAccountTableView.setItems(selectedInstitution.getAccountList());
             }
         });
 
@@ -99,8 +80,6 @@ budget.debugSelectedUserData();
     @FXML
     protected void addInstitution(ActionEvent event) {
         System.out.println("IVC::addInstitution()");
-
-        ObservableList<Institution> institutionData = institutionTableView.getItems();
 
         // TODO - move this somewhere
         List<String> choices = new ArrayList<>();
@@ -118,38 +97,28 @@ budget.debugSelectedUserData();
         // Add institution to data store and set it as table selection
         result.ifPresent(institutionName -> {
             Institution institution = new Institution(institutionName);
-            institutionData.add(institution);
+            //institutionData.add(institution);
+            budgetData.getSelectedUser().addInstitution(institution);
             institutionTableView.getSelectionModel().select(institution);
-
-//            // write the selection back to the user's list
-//            User user = userData.getSelectedUser();
-//            if (user != null) {
-//                System.out.println("The selected user is " + user.getFirstName());
-//                //user.addInstitution(institution);
-//             }
         });
 
     } // addInstitution
 
-    void setBudget(Budget budget) {
-        this.budget = budget;
-
+    void setBudgetData(BudgetData budgetData) {
+        this.budgetData = budgetData;
         init();
     }
-
-    private void setTable(User selectedUser) {
+    
+    private void setTable() {
+        User user = budgetData.getSelectedUser();
         
-        if (selectedUser != null) {
-            InstitutionData institutionData = selectedUser.getInstitutionData();
-
-            if (institutionData != null) {
-                ObservableList<Institution> institutionList = institutionData.getInstitutionList();
-                institutionTableView.setItems(institutionList);
-            }
+        if (user != null) {
+            ObservableList<Institution> institutionList = user.getInstitutionList();
+            institutionTableView.setItems(institutionList);
 
             // link institution view - Right hand side table
-            institutionAccountTableView.setItems(userData.getSelectedUser().getInstitutionData().getAccountData().getAccountList());
+            //institutionAccountTableView.setItems(userData.getSelectedUser().getInstitutionData().getAccountData().getAccountList());
         }
     }
-    
+
 } // InstitutionViewController

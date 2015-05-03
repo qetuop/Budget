@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,15 +26,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
  */
 public class AccountViewController implements Initializable {
 
-    private Budget budget;
-    UserData userData; // will be gotten from budget class
+    private BudgetData budgetData;
 
     @FXML
     private TableView<Account> accountTableView;
     @FXML
-    private TableColumn<Account, String> AccountNameCol;
-
-    private Account selectedAccount = new Account();
+    private TableColumn<Transaction, String> AccountNameCol;
+    
+    // right side table/col
+    @FXML
+    public TableView<Transaction> accountTransactionTableView;
+    @FXML
+    private TableColumn<Transaction, String> TransactionCol;
 
     /**
      * Initializes the controller class.
@@ -45,33 +46,30 @@ public class AccountViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         System.out.println("AVC::initialize()");
         AccountNameCol.setCellValueFactory(new PropertyValueFactory<>("AccountName"));
+        
+        TransactionCol.setCellValueFactory(new PropertyValueFactory<>("TransactionName"));
     }
 
     private void init() {
         System.out.println("AVC::init()");
 
-        userData = budget.getUserData();
-
         // set the table up with initial data
-        setTable(userData.getSelectedUser().getSelectedInstitution());
+        setTable();
 
-        // handle INSTITUTION table selection events 
-        userData.getInstitutionData().addPropertyChangeListener(evt -> {
-            System.out.println("AVC::INSTITUTION has changed");
-            Institution institution = (Institution) evt.getNewValue();
-
-            setTable(institution);
+        // handle INSTITUTION selection (from other tab) - set the institution list to this user's list
+        budgetData.addInstitutionPropertyChangeListener(evt -> {
+            setTable();
         });
-        
+
         // propagate account selections
         accountTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (accountTableView.getSelectionModel().getSelectedItem() != null) {
 
-                selectedAccount = accountTableView.getSelectionModel().getSelectedItem();
-                userData.getInstitutionData().getAccountData().setSelectedAccount(selectedAccount);
+                Account selectedAccount = accountTableView.getSelectionModel().getSelectedItem();
+                budgetData.setSelectedAccount(selectedAccount);
 
-                // link institution view - Right hand side table - future growth
-                //userInstitutionTableView.setItems(selectedUser.getInstitutionData().getInstitutionList());
+                // link institution view - Right hand side table
+                accountTransactionTableView.setItems(selectedAccount.getTransactionList());
             }
         });
 
@@ -83,8 +81,6 @@ public class AccountViewController implements Initializable {
     @FXML
     protected void addAccount(ActionEvent event) {
         System.out.println("AVC::addAccount()");
-
-        ObservableList<Account> accountData = accountTableView.getItems();
 
         // TODO - move this somewhere
         List<String> choices = new ArrayList<>();
@@ -102,38 +98,29 @@ public class AccountViewController implements Initializable {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(accountName -> {
             System.out.println("Your choice: " + accountName);
-            
+
             Account account = new Account();
             account.setAccountName(accountName);
-            accountData.add(account);
-
-//            // write the selection back to the user's list
-//            User user = userData.getSelectedUser();
-//            if (user != null) {
-//                System.out.println("The selected user is " + user.getFirstName());
-//             }
+            budgetData.getSelectedInstitution().addAccount(account);
         });
 
     } // addAccount
 
-
-//    }
-    void setBudget(Budget budget) {
-        this.budget = budget;
+    void setBudgetData(BudgetData budgetData) {
+        this.budgetData = budgetData;
         init();
     }
 
-    private void setTable(Institution selectedInstitution) {
-        System.out.println("AVC::setTable() " + selectedInstitution);
-        
-        //if (selectedInstitution != null) {
-            AccountData accountData = selectedInstitution.getAccountData();
+    private void setTable() {
+        Institution institution = budgetData.getSelectedInstitution();
 
-            //if (accountData != null) {
-                ObservableList<Account> accountList = accountData.getAccountList();
-                accountTableView.setItems(accountList);
-            //}
-        //}
+        if (institution != null) {
+            ObservableList<Account> accountList = institution.getAccountList();
+            accountTableView.setItems(accountList);
+
+            // link institution view - Right hand side table
+            //accountTransactionTableView.setItems(selectedAccount.getTransactionList());
+        }
     }
 
-}
+} // AccountViewController

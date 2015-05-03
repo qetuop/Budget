@@ -18,18 +18,16 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 /**
  *
  * @author Brian
  */
-public class Budget extends Application {
+public class MainApp extends Application {
     
     //  this *is* the main data store 
-    private UserData userData = new UserData();
+    private BudgetData budgetData = new BudgetData();
     
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -37,17 +35,18 @@ public class Budget extends Application {
         if ( !load() )
             hardcodedSetup();
 
-        debugAllUserData();
+        budgetData.debugAllUserData();
         
         Parent root;
         Scene scene;
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Budget.class.getResource("MainAppView.fxml"));
+        loader.setLocation(MainApp.class.getResource("MainAppView.fxml"));
         root = loader.load();
 
         // enable all children to get this class (and thus the userData)
         MainAppViewController mvc = loader.getController();            
-        mvc.setBudget(this);
+        mvc.setBudgetData(budgetData);
+        mvc.setMainApp(this);
                     
         scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -62,13 +61,13 @@ public class Budget extends Application {
         launch(args);
     }  
     
-    public UserData getUserData() {
-        return userData;
+    public BudgetData getBudgetData() {
+        return budgetData;
     }
     
-    public void setUserData(UserData userData) {
-        this.userData = userData;        
-    }
+//    public void setUserData(UserData userData) {
+//        this.userData = userData;        
+//    }
 
     private void hardcodedSetup() {
         System.out.println("Budget::hardcodedSetup()");
@@ -78,25 +77,26 @@ public class Budget extends Application {
         
         Institution institution = new Institution();
         institution.setInstitutionName("Hole in Backyard INC.");
-        user.addInstitution(institution);
         
-        userData.addUser(user);
+        Account account = new Account();
+        account.setAccountName("Old Sock");
+        
+        Transaction transaction = new Transaction();
+        transaction.setTransactionName("wooded nickle");
+                
+        account.addTransaction(transaction);
+        institution.addAccount(account);
+        user.addInstitution(institution);        
+        budgetData.addUser(user);
      }
     
     public Boolean load() {
         try {
             FileInputStream fileIn = new FileInputStream("test.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            userData = (UserData) in.readObject();
+            budgetData = (BudgetData) in.readObject();
             in.close();
-            fileIn.close();
-            
-            User u2 = userData.getUser();
-            
-            //System.out.println(u2.getFirstName() + " " + u2.getLastName() + " " + u2.getInstitutionData().getInstitutionList().get(0).getInstitutionName());
-            
-            //budget.setUserData(userDataIn);
-            
+            fileIn.close();            
         } catch (IOException i) {
             i.printStackTrace();
             return false;
@@ -110,13 +110,14 @@ public class Budget extends Application {
     }
     
     public void save() {
+        System.out.println("SAVING");
         String fileName = "test.ser";
         FileOutputStream fos;
         try {
             fos = new FileOutputStream(fileName);
             BufferedOutputStream bos = new BufferedOutputStream(fos);
             ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeObject(userData);
+            oos.writeObject(budgetData);
             oos.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MainAppViewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,32 +125,6 @@ public class Budget extends Application {
             Logger.getLogger(MainAppViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    void debugSelectedUserData() {
-        System.out.println("** SelectedUser **");
-        
-        User u = userData.getSelectedUser();
-        System.out.println("  USER: " + u.getFirstName() + " " + u.getLastName());
-        
-        InstitutionData i = u.getInstitutionData();
-        System.out.println("  INST: " + i.getSelectedInstitution().getInstitutionName());
-        
-        AccountData a = i.getAccountData();
-        System.out.println("  ACNT: " + a.getAccountList().size()); 
-        
-        System.out.println("****************");
-    }
     
-    void debugAllUserData() {
-        
-        for (User u : userData.getUserList() ){
-            System.out.println(u.getFirstName() + " " + u.getLastName());
-            for ( Institution i : u.getInstitutionData().getInstitutionList() ) {
-                System.out.println("  " + i.getInstitutionName());
-                for ( Account a : i.getAccountData().getAccountList() ) {
-                    System.out.println("    " + a.getAccountName());
-                }
-            } // institution            
-        } // user
-    }
-    
+
 } // Budget

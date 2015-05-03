@@ -9,8 +9,10 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -21,18 +23,19 @@ public class User implements Externalizable {
 
     private final StringProperty firstName;
     private final StringProperty lastName;
-    private InstitutionData institutionData;
+
+    private ObservableList<Institution> institutionList;
 
     public User() {
         this.firstName = new SimpleStringProperty(this, "firstName", "");
         this.lastName = new SimpleStringProperty(this, "lastName", "");
 
-        this.institutionData = new InstitutionData();
+        institutionList = FXCollections.observableArrayList();
     }
 
     public User(String firstName, String lastName) {
         this();
-        
+
         this.setFirstName(firstName);
         this.setLastName(lastName);
     }
@@ -62,30 +65,30 @@ public class User implements Externalizable {
     }
 
     public void addInstitution(Institution institution) {
-        this.institutionData.addInstitution(institution);
+        this.institutionList.add(institution);
     }
 
-    public InstitutionData getInstitutionData() {
-        return institutionData;
+    ObservableList<Institution> getInstitutionList() {
+        return institutionList;
     }
 
-    //public Institution getInstitution();
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeObject(getFirstName());
         out.writeObject(getLastName());
-        out.writeObject(institutionData);
+
+        ArrayList<Institution> tmp = new ArrayList<>(institutionList);
+        out.writeObject(tmp);
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         setFirstName((String) in.readObject());
         setLastName((String) in.readObject());
-        
-        institutionData = (InstitutionData)in.readObject();
+
+        // TODO use setList ?
+        ArrayList<Institution> tmp = (ArrayList<Institution>) in.readObject();
+        institutionList = FXCollections.observableArrayList(tmp);
     }
 
-    Institution getSelectedInstitution() {
-        return institutionData.getSelectedInstitution();
-    }
-}
+} // User

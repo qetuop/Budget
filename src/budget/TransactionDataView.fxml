@@ -14,20 +14,20 @@
            minHeight="-Infinity" minWidth="-Infinity" 
            prefHeight="400.0" prefWidth="600.0" 
            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
-           fx:controller="budget.AccountViewController">
+           fx:controller="budget.TransactionViewController">
     <items>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
             <children>
                 <VBox prefHeight="398.0" prefWidth="296.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <children>
-                        <TableView fx:id="accountTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="transactionTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="AccountNameCol" prefWidth="295.0" text="Account" />
+                                <TableColumn fx:id="TransactionNameCol" prefWidth="295.0" text="Transaction" />
                             </columns>
                         </TableView>
                         <FlowPane alignment="CENTER" prefHeight="52.0" prefWidth="296.0">
                             <children>
-                                <Button mnemonicParsing="false" onAction="#addAccount" text="Add Account" />
+                                <Button mnemonicParsing="false" onAction="#addTransaction" text="Add Transaction" />
                             </children>
                         </FlowPane>
                     </children>
@@ -36,9 +36,12 @@
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
             <children>
-                <TableView fx:id="accountTransactionTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="398.0" prefWidth="296.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <TableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" 
+                           prefHeight="398.0" prefWidth="296.0" 
+                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" 
+                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                        <TableColumn fx:id="TransactionCol" prefWidth="295.0" text="Transaction" />
+                        <TableColumn prefWidth="295.0" text="Details" />
                     </columns>
                 </TableView>
             </children>
