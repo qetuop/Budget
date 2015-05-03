@@ -61,7 +61,6 @@ public class BudgetData implements Externalizable {
     }
 
     public void setSelectedUser(User user) {
-        System.out.println("BD::setSelectedUser(): " + user.getFirstName());
         User oldSelectedUser = selectedUser;
         selectedUser = user;
 
@@ -158,15 +157,17 @@ public class BudgetData implements Externalizable {
     }
 
     void debugSelectedUserData() {
-        System.out.println("** SelectedUser **");
+        System.out.println("** SelectedData **");
 
-        User u = getSelectedUser();
+        User u = this.getSelectedUser();
         Institution i = this.getSelectedInstitution();
         Account a = this.getSelectedAccount();
+        Transaction t = this.getSelectedTransaction();
         
         System.out.println("  USER: " + u.getFirstName() + " " + u.getLastName() + ", institution size: " + u.getInstitutionList().size());
         System.out.println("  INST: " + i.getInstitutionName() + ", account size: " + i.getAccountList().size());
         System.out.println("  ACNT: " + a.getAccountName());
+        System.out.println("  TRAS: " + t.getTransactionName());
         System.out.println("****************");
     }
 
@@ -178,6 +179,8 @@ public class BudgetData implements Externalizable {
                 System.out.println("  " + i.getInstitutionName());
                 for ( Account a : i.getAccountList() ) {
                     System.out.println("    " + a.getAccountName());
+                    for ( Transaction t : a.getTransactionList() )
+                        System.out.println("     " + t.getTransactionName());
                 }
             } // institution            
         } // user

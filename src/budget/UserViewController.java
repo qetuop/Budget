@@ -69,8 +69,6 @@ public class UserViewController implements Initializable {
                 User selectedUser = userTableView.getSelectionModel().getSelectedItem();
                 budgetData.setSelectedUser(selectedUser);
 
-                System.out.println("UVC::selected user now = " + selectedUser.getFirstName());
-
                 // link institution view - Right hand side table
                 userInstitutionTableView.setItems(selectedUser.getInstitutionList());
             }
@@ -146,11 +144,4 @@ public class UserViewController implements Initializable {
         init();
     }
 
-//    private void debugUser(User selectedUser) {
-//        InstitutionData institutionData = selectedUser.getInstitutionData();
-//        if (institutionData != null) {
-//            ObservableList<Institution> institutionList = institutionData.getInstitutionList();
-//            System.out.println("UVC::debugUser, inst list = " + institutionList.size());
-//        }
-//    }
-}
+} // UserViewController
