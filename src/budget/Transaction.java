@@ -32,9 +32,16 @@ public class Transaction implements Externalizable {
     final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public Transaction() {
-        this.transactionName = new SimpleStringProperty(this, "transactionName", "");
         this.transactionDate = new SimpleObjectProperty<>(this, "transactionDate", LocalDate.MIN);
+        this.transactionName = new SimpleStringProperty(this, "transactionName", "");        
         this.transactionAmount = new SimpleDoubleProperty(this, "transactionAmount", 0.0);
+    }
+    
+    public Transaction( LocalDate localDate, String name, Double amount ) {
+        this();
+        this.setTransactionDate(localDate);
+        this.setTransactionName(name);
+        this.setTransactionAmount(amount);
     }
 
     public final String getTransactionName() {

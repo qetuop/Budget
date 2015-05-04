@@ -30,6 +30,7 @@
                         <FlowPane alignment="CENTER" prefHeight="52.0" prefWidth="296.0">
                             <children>
                                 <Button mnemonicParsing="false" onAction="#addTransaction" text="Add Transaction" />
+                                <Button mnemonicParsing="false" onAction="#importTransaction" text="Import Transaction" />
                             </children>
                         </FlowPane>
                     </children>

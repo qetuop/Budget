@@ -108,6 +108,16 @@ public class TransactionViewController implements Initializable {
     } // init
 
     @FXML
+    protected void importTransaction(ActionEvent event) {
+        System.out.println("TVC::importTransaction()");
+        Importer i = new Importer();
+        ArrayList<Transaction> transactionList;
+        transactionList = i.readData();
+        for (Transaction t: transactionList )
+            budgetData.getSelectedAccount().addTransaction(t);
+    }
+    
+    @FXML
     protected void addTransaction(ActionEvent event) {
         System.out.println("TVC::addTransaction()");
 
