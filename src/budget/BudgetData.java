@@ -153,6 +153,11 @@ public class BudgetData implements Externalizable {
     void addUser(User user) {
         userList.add(user);
     }
+    
+    public void update() {
+        this.debugAllUserData();
+        //this.setSelectedUser(this.userList.get(0));
+    }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {

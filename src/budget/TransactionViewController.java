@@ -5,10 +5,10 @@
  */
 package budget;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +21,9 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.StringConverter;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -41,7 +42,7 @@ public class TransactionViewController implements Initializable {
     private TableColumn<Transaction, LocalDate> TransactionDateCol;
     @FXML
     private TableColumn<Transaction, Double> TransactionAmountCol;
-    
+
     final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     /**
@@ -50,11 +51,11 @@ public class TransactionViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         System.out.println("TVC::initialize()");
-        
+
         TransactionDateCol.setCellValueFactory(new PropertyValueFactory<>("TransactionDate"));
         TransactionNameCol.setCellValueFactory(new PropertyValueFactory<>("TransactionName"));
         TransactionAmountCol.setCellValueFactory(new PropertyValueFactory<>("TransactionAmount"));
-        
+
 //        TransactionDateCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<LocalDate>() {
 //
 //            @Override
@@ -76,7 +77,6 @@ public class TransactionViewController implements Initializable {
 //            }
 //
 //        }));
-        
     } // initialize
 
     private void init() {
@@ -110,13 +110,42 @@ public class TransactionViewController implements Initializable {
     @FXML
     protected void importTransaction(ActionEvent event) {
         System.out.println("TVC::importTransaction()");
-        Importer i = new Importer();
-        ArrayList<Transaction> transactionList;
-        transactionList = i.readData();
-        for (Transaction t: transactionList )
-            budgetData.getSelectedAccount().addTransaction(t);
+
+        Stage stage = (Stage) transactionTableView.getScene().getWindow();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open CSV File");
+//        fileChooser.setInitialDirectory( new File(System.getProperty("user.home")) ); 
+        fileChooser.setInitialDirectory(new File("C:\\Users\\Brian\\Documents\\NetBeansProjects\\Budget"));
+
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Text CSV", "*.csv"),
+                new ExtensionFilter("All Files", "*.*"));
+
+        List<File> list = fileChooser.showOpenMultipleDialog(stage);
+        if (list != null) {
+            for (File file : list) {
+                Importer i = new Importer();
+            ArrayList<Transaction> transactionList;
+            transactionList = i.readData(file);
+            transactionList.stream().forEach((t) -> {
+                budgetData.getSelectedAccount().addTransaction(t);
+            });
+            }
+        }
+
+//        File file = fileChooser.showOpenDialog(stage);
+//        if (file != null) {
+//            Importer i = new Importer();
+//            ArrayList<Transaction> transactionList;
+//            transactionList = i.readData(file);
+//            transactionList.stream().forEach((t) -> {
+//                budgetData.getSelectedAccount().addTransaction(t);
+//            });
+//        }
+
     }
-    
+
     @FXML
     protected void addTransaction(ActionEvent event) {
         System.out.println("TVC::addTransaction()");
@@ -159,7 +188,7 @@ public class TransactionViewController implements Initializable {
             //accounttransactionTableView.setItems(selectedTransaction.getTransactionList());
         }
     }
-    
+
     public void setFirstEntry() {
         transactionTableView.getSelectionModel().selectFirst();
     }

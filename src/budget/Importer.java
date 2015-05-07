@@ -6,6 +6,7 @@
 package budget;
 
 import au.com.bytecode.opencsv.CSVReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -25,12 +26,13 @@ import java.util.logging.Logger;
  */
 public class Importer {
 
-    public ArrayList<Transaction> readData() {
+    public ArrayList<Transaction> readData(File file) {
         CSVReader csvReader;
         ArrayList<Transaction> transactionList = new ArrayList<>();
 
         try {
-            csvReader = new CSVReader(new FileReader("sample.csv"));
+//            csvReader = new CSVReader(new FileReader("sample.csv"));
+            csvReader = new CSVReader(new FileReader(file));
             String[] line;
             line = csvReader.readNext(); // get first non line
             while ((line = csvReader.readNext()) != null) {
