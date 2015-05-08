@@ -5,7 +5,6 @@
  */
 package budget;
 
-
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
@@ -26,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
@@ -118,7 +118,7 @@ public class TransactionViewController implements Initializable {
     protected void contextMenuRequested() {
         System.out.println("TVC::contextMenuRequested()");
     }
-    
+
     @FXML
     protected void importTransaction(ActionEvent event) {
         System.out.println("TVC::importTransaction()");
@@ -157,11 +157,11 @@ public class TransactionViewController implements Initializable {
 //        }
     }
 
-     @FXML
+    @FXML
     protected void editTransaction(ActionEvent event) {
         System.out.println("TVC::editTransaction()");
     }
-    
+
     @FXML
     protected void addTransaction(ActionEvent event) {
         System.out.println("TVC::addTransaction()");
@@ -194,6 +194,15 @@ public class TransactionViewController implements Initializable {
         amount.setPromptText("Transaction Amount");
         amount.setText("0.0");
 
+        // restrict amount text field to numbers
+        TextFormatter<String> formatter = new TextFormatter<String>(change -> {
+            change.setText(change.getText().replaceAll("[\\D+]", ""));
+//            change.setText(change.getText().replaceAll("[^\\d+(\\.\\d{0,2})?$]", ""));
+//            change.setText(change.getText().replaceAll("[^-?\\d+(\\.\\d{2})?$]", ""));
+            return change;
+        });
+        amount.setTextFormatter(formatter);
+
         grid.add(new Label("Transaction Date:"), 0, 0);
         grid.add(datePicker, 1, 0);
         grid.add(new Label("Transaction Name:"), 0, 1);
@@ -214,7 +223,6 @@ public class TransactionViewController implements Initializable {
 
         // Request focus on the first field by default.
         //Platform.runLater(() -> firstName.requestFocus());
-        
         // Convert the result to a Transaction when the ok button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
@@ -223,7 +231,6 @@ public class TransactionViewController implements Initializable {
 
                 //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
                 //LocalDate ld = LocalDate.parse(date.getText(), formatter);
-
                 return new Transaction(datePicker.getValue(), displayName.getText(), Double.parseDouble(amount.getText()));
             }
             return null;

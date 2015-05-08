@@ -24,6 +24,8 @@ import javafx.beans.property.StringProperty;
  * @author Brian
  */
 public class Transaction implements Externalizable {
+    
+    private static final long serialVersionUID = 1;
 
     private final StringProperty transactionName;
     private final ObjectProperty<LocalDate> transactionDate;

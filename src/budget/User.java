@@ -20,6 +20,8 @@ import javafx.collections.ObservableList;
  * @author Brian
  */
 public class User implements Externalizable {
+    
+    private static final long serialVersionUID = 1;
 
     private final StringProperty firstName;
     private final StringProperty lastName;

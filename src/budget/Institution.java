@@ -20,6 +20,9 @@ import javafx.collections.ObservableList;
  * @author Brian
  */
 public class Institution implements Externalizable {
+    
+    private static final long serialVersionUID = 1;
+    
     private final StringProperty institutionName;
     private ObservableList<Account> accountList;
     
