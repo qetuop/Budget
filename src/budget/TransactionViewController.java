@@ -5,6 +5,7 @@
  */
 package budget;
 
+
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
@@ -17,10 +18,16 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ChoiceDialog;
+import javafx.geometry.Insets;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -85,12 +92,12 @@ public class TransactionViewController implements Initializable {
         // set the table up with initial data
         setTable();
 
-        // handle INSTITUTION selection (from other tab) - set the institution list to this user's list
+        // handle ACCOUNT selection (from other tab) - set the institution list to this user's list
         budgetData.addAccountPropertyChangeListener(evt -> {
             setTable();
         });
 
-        // propagate account selections
+        // propagate transactions selections
         transactionTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (transactionTableView.getSelectionModel().getSelectedItem() != null) {
 
@@ -107,6 +114,11 @@ public class TransactionViewController implements Initializable {
 
     } // init
 
+    @FXML
+    protected void contextMenuRequested() {
+        System.out.println("TVC::contextMenuRequested()");
+    }
+    
     @FXML
     protected void importTransaction(ActionEvent event) {
         System.out.println("TVC::importTransaction()");
@@ -126,11 +138,11 @@ public class TransactionViewController implements Initializable {
         if (list != null) {
             for (File file : list) {
                 Importer i = new Importer();
-            ArrayList<Transaction> transactionList;
-            transactionList = i.readData(file);
-            transactionList.stream().forEach((t) -> {
-                budgetData.getSelectedAccount().addTransaction(t);
-            });
+                ArrayList<Transaction> transactionList;
+                transactionList = i.readData(file);
+                transactionList.stream().forEach((t) -> {
+                    budgetData.getSelectedAccount().addTransaction(t);
+                });
             }
         }
 
@@ -143,31 +155,85 @@ public class TransactionViewController implements Initializable {
 //                budgetData.getSelectedAccount().addTransaction(t);
 //            });
 //        }
-
     }
 
+     @FXML
+    protected void editTransaction(ActionEvent event) {
+        System.out.println("TVC::editTransaction()");
+    }
+    
     @FXML
     protected void addTransaction(ActionEvent event) {
         System.out.println("TVC::addTransaction()");
+// Create the custom dialog.
+        Dialog<Transaction> dialog = new Dialog<>();
+        dialog.setTitle("New Transaction");
+        dialog.setHeaderText("<header text>");
 
-        // TODO - move this somewhere
-        List<String> choices = new ArrayList<>();
-        choices.add("Money IN");
-        choices.add("Money OUT");
+        // Set the button types.
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
-        dialog.setTitle("Add Transaction");
-        dialog.setHeaderText("Look, a Choice Dialog");
-        dialog.setContentText("Choose your Transaction:");
+        // Create the first and last labels and fields.
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
 
-        // The Java 8 way to get the response value (with lambda expression).
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(transactionName -> {
-            System.out.println("Your choice: " + transactionName);
+        DatePicker datePicker = new DatePicker();
+        datePicker.setValue(LocalDate.now());
+        TextField dateTF = new TextField();
+        dateTF.setPromptText("Transaction Date");
 
-            Transaction transaction = new Transaction();
-            transaction.setTransactionName(transactionName);
-            budgetData.getSelectedAccount().addTransaction(transaction);
+        TextField name = new TextField();
+        name.setPromptText("Transaction Name");
+
+        TextField displayName = new TextField();
+        displayName.setPromptText("Display Name");
+
+        TextField amount = new TextField();
+        amount.setPromptText("Transaction Amount");
+        amount.setText("0.0");
+
+        grid.add(new Label("Transaction Date:"), 0, 0);
+        grid.add(datePicker, 1, 0);
+        grid.add(new Label("Transaction Name:"), 0, 1);
+        grid.add(name, 1, 1);
+        grid.add(new Label("Display Name:"), 0, 2);
+        grid.add(displayName, 1, 2);
+        grid.add(new Label("Transaction Amount:"), 0, 3);
+        grid.add(amount, 1, 3);
+
+        // Enable/Disable ok button depending on whether a first name was entered.
+//        Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
+//        okButton.setDisable(true);
+//        // Do some validation (using the Java 8 lambda syntax).
+//        firstName.textProperty().addListener((observable, oldValue, newValue) -> {
+//            okButton.setDisable(newValue.trim().isEmpty());
+//        });
+        dialog.getDialogPane().setContent(grid);
+
+        // Request focus on the first field by default.
+        //Platform.runLater(() -> firstName.requestFocus());
+        
+        // Convert the result to a Transaction when the ok button is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                //DateTimeFormatter dtf = DateTimeFormat.forPattern("MM-dd-yyyy");
+                //LocalDate dt = dateFormat.parseLocalDate(date.getText());
+
+                //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+                //LocalDate ld = LocalDate.parse(date.getText(), formatter);
+
+                return new Transaction(datePicker.getValue(), displayName.getText(), Double.parseDouble(amount.getText()));
+            }
+            return null;
+        });
+
+        Optional<Transaction> result = dialog.showAndWait();
+
+        // Add user to data store and set it as table selection
+        result.ifPresent(newTransaction -> {
+            budgetData.getSelectedAccount().addTransaction(newTransaction);
         });
 
     } // addTransaction

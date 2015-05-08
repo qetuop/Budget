@@ -42,6 +42,8 @@ public class MainApp extends Application {
 //        if (!load()) {
 //            hardcodedSetup();
 //        }
+        
+        loadFile( new File("C:\\Users\\Brian\\Documents\\NetBeansProjects\\Budget\\sample.bud") );
 
         budgetData.debugAllUserData();
 
