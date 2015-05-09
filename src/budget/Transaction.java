@@ -9,10 +9,10 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -29,17 +29,17 @@ public class Transaction implements Externalizable {
 
     private final StringProperty transactionName;
     private final ObjectProperty<LocalDate> transactionDate;
-    private final DoubleProperty transactionAmount;  // ? BigDecmial ?
+    private final SimpleObjectProperty<BigDecimal> transactionAmount;  // ? BigDecmial ?
 
     final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public Transaction() {
         this.transactionDate = new SimpleObjectProperty<>(this, "transactionDate", LocalDate.MIN);
         this.transactionName = new SimpleStringProperty(this, "transactionName", "");        
-        this.transactionAmount = new SimpleDoubleProperty(this, "transactionAmount", 0.0);
+        this.transactionAmount = new SimpleObjectProperty<BigDecimal>(this, "transactionAmount", BigDecimal.ZERO);
     }
     
-    public Transaction( LocalDate localDate, String name, Double amount ) {
+    public Transaction( LocalDate localDate, String name, BigDecimal amount ) {
         this();
         this.setTransactionDate(localDate);
         this.setTransactionName(name);
@@ -70,15 +70,15 @@ public class Transaction implements Externalizable {
         return transactionDate;
     }
     
-    public final Double getTransactionAmount() {
+    public final BigDecimal getTransactionAmount() {
         return transactionAmount.get();
     }
 
-    public final void setTransactionAmount(Double value) {
+    public final void setTransactionAmount(BigDecimal value) {
         transactionAmount.set(value);
     }
 
-    public final DoubleProperty getTransactionFloatProperty() {
+    public final SimpleObjectProperty<BigDecimal> getTransactionFloatProperty() {
         return transactionAmount;
     }
 
@@ -93,7 +93,7 @@ public class Transaction implements Externalizable {
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         setTransactionDate((LocalDate) in.readObject());
         setTransactionName((String) in.readObject());
-        setTransactionAmount((Double) in.readObject());        
+        setTransactionAmount((BigDecimal) in.readObject());        
     }
 
     @Override

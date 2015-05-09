@@ -10,7 +10,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -62,7 +64,12 @@ public class Importer {
                 }
                 //Expense(Long date, Long id, String merchant, String location, Double amount)
                 //Expense expense = new Expense(date.getTime(), new Double(line[1]), line[2], line[3], new Double(line[4]));
-                Transaction transaction = new Transaction(localDate, line[2], new Double(amount));
+                DecimalFormat decimalFormat = new DecimalFormat();
+                decimalFormat.setParseBigDecimal(true);
+                BigDecimal bigDecimal = (BigDecimal) decimalFormat.parse(amount);
+
+                
+                Transaction transaction = new Transaction(localDate, line[2], bigDecimal);
                 transactionList.add(transaction);
                 System.out.println(transaction + "\n");
                 // }

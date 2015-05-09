@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class MainApp extends Application {
         Transaction transaction = new Transaction();
         transaction.setTransactionDate(LocalDate.now());
         transaction.setTransactionName("wooden nickle");
-        transaction.setTransactionAmount(100.28);
+        transaction.setTransactionAmount(BigDecimal.ZERO);
 
         account.addTransaction(transaction);
         institution.addAccount(account);
